@@ -3,9 +3,13 @@ import { useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import axios from "axios";
 import { setUser } from "../../Redux/Reducers/authSlice";
+import Dashboard from '../Dashboard/Dashboard'
 
 const SetProfile = () => {
-  const { id, role } = useSelector((state) => state.auth.user);
+  const { user } = useSelector((state) => state.auth);
+  const id = user?.clerkId
+  console.log(id)
+  const role = user?.role
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -50,6 +54,7 @@ const SetProfile = () => {
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 p-6">
+    <Dashboard/>
       <h2 className="text-xl font-semibold mb-4">
         Complete Your {role === "recruiter" ? "Recruiter" : "Candidate"} Profile
       </h2>

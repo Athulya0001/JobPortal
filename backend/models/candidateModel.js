@@ -1,3 +1,4 @@
+import mongoose from 'mongoose';
 import User from './userModel.js'
 
 const candidateSchema = new mongoose.Schema({
