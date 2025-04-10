@@ -5,22 +5,21 @@ const userSchema = new mongoose.Schema({
   name: { type: String, required: true },
   email: { type: String, required: true, unique: true },
   profileImage: String,
-  address: String,
-  phone: String,
+  // address: String,
+  // phone: String,
   role: { 
     type: String, 
-    enum: ['candidate', 'recruiter'],
-    default: 'candidate',
+    enum: ['candidate', 'recruiter', 'guest'],
+    default: 'guest',
     required: true ,
   },
-  authType: {
-    type: String,
-    enum: ['google', 'email'],
-    default: 'google'
-  }  
+  // authType: {
+  //   type: String,
+  //   enum: ['google', 'email'],
+  //   default: 'google'
+  // }
 }, { 
   timestamps: true,
-  discriminatorKey: 'role' 
 });
 
 const User = mongoose.model("User", userSchema);

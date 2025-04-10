@@ -1,8 +1,7 @@
 import mongoose from 'mongoose';
-import User from './userModel.js'
 
 const candidateSchema = new mongoose.Schema({
-    role: { type: String, default: 'candidate' },
+    role: { type: String, default: 'candidate', enum: ['candidate'] },
     resume: { type: String, required: true },
     skills: [String],
     appliedJobs: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Job' }],
@@ -11,6 +10,6 @@ const candidateSchema = new mongoose.Schema({
     selectedJobs: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Job' }]
   });
 
-const Candidate= User.discriminator('Candidate', candidateSchema)
+const Candidate= mongoose.model('Candidate', candidateSchema)
 
 export default Candidate

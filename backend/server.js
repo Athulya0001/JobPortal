@@ -17,7 +17,7 @@ app.use(cors({
 
 dotenv.config()
 
-const port = process.env.PORT || 4000
+const port = process.env.PORT || 5000
 
 app.get("/api/protected", requireAuth, (req, res) => {
     console.log(req.user,"user")
