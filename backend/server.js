@@ -4,6 +4,7 @@ import cors from 'cors'
 import mongoConnect from './mongoConnect.js'
 import requireAuth from './middleware/requireAuth.js'
 import userRouter from './routes/userRoutes.js'
+import jobRouter from './routes/jobRoutes.js'
 
 const app = express()
 
@@ -12,7 +13,7 @@ app.use(express.urlencoded({extended: true}))
 
 app.use(cors({
     origin: "http://localhost:5173",
-    methods: "GET, POST, PUT, DELETE",
+    credentials: true,
 }))
 
 dotenv.config()
@@ -25,6 +26,7 @@ app.get("/api/protected", requireAuth, (req, res) => {
   });
 
 app.use('/api/user', userRouter);
+app.use("/api/job", jobRouter);
 
 mongoConnect().then(()=>{
     try {

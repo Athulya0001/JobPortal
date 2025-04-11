@@ -1,41 +1,62 @@
-import { SignedIn, SignedOut, UserButton } from "@clerk/clerk-react";
-import { Navigate } from "react-router-dom";
+import { Link, Outlet } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { useContext } from "react";
+import { ThemeContext } from "../../Context/ThemeContext";
 
 const Dashboard = () => {
-  return (
-    <div>
-      <SignedIn>
-        <div className="p-6">
-          <h1 className="text-xl font-bold">Welcome to Dashboard</h1>
-          <UserButton />
-        </div>
-      </SignedIn>
+  const role = useSelector((state) => state.auth.user?.role);
+  const { darkMode } = useContext(ThemeContext);
 
-      <SignedOut>
-        <Navigate to="/auth" />
-      </SignedOut>
-      {/* {isSignedIn && !user?.role  ? (
-        <div className="flex flex-col items-center">
-          <h2 className="text-xl font-semibold mb-4">Select Your Role</h2>
-          <form onSubmit={handleSubmit} className="flex flex-col gap-3">
-            <select
-              value={role}
-              onChange={(e) => setRole(e.target.value)}
-              className="border p-2 rounded"
-            >
-              <option value="">Choose a role</option>
-              <option value="candidate">Candidate</option>
-              <option value="recruiter">Recruiter</option>
-            </select>
-            <button
-              type="submit"
-              className="bg-blue-500 text-white p-2 rounded disabled:opacity-50"
-              disabled={!role}
-            >Set Role
-            </button>
-          </form>
-        </div>
-      ) } */}
+  return (
+    <div className={`flex h-screen mt-[80px] ${darkMode ? "bg-gray-900 text-white" : "bg-gray-50 text-gray-900"}`}>
+      <aside className={`w-64 p-6 space-y-4 shadow-md ${darkMode ? "bg-green-700 text-white" : "bg-green-500 text-black"}`}>
+        <h2 className="text-2xl font-bold mb-6">Dashboard</h2>
+
+        <nav className="space-y-2">
+          <Link
+            to="profile"
+            className={`block px-4 py-2 rounded transition-all duration-200 ${darkMode ? "hover:bg-green-600" : "hover:bg-green-400"}`}
+          >
+            View Profile
+          </Link>
+
+          {role === "recruiter" ? (
+            <>
+              <Link
+                to="add-job"
+                className={`block px-4 py-2 rounded transition-all duration-200 ${darkMode ? "hover:bg-green-600" : "hover:bg-green-400"}`}
+              >
+                Add Job
+              </Link>
+              <Link
+                to="view-jobs"
+                className={`block px-4 py-2 rounded transition-all duration-200 ${darkMode ? "hover:bg-green-600" : "hover:bg-green-400"}`}
+              >
+                View Jobs
+              </Link>
+            </>
+          ) : (
+            <>
+              <Link
+                to="applied-jobs"
+                className={`block px-4 py-2 rounded transition-all duration-200 ${darkMode ? "hover:bg-green-600" : "hover:bg-green-400"}`}
+              >
+                Applied Jobs
+              </Link>
+              <Link
+                to="saved-jobs"
+                className={`block px-4 py-2 rounded transition-all duration-200 ${darkMode ? "hover:bg-green-600" : "hover:bg-green-400"}`}
+              >
+                Saved Jobs
+              </Link>
+            </>
+          )}
+        </nav>
+      </aside>
+
+      <main className={`flex-1 overflow-y-auto p-6 ${darkMode ? "bg-gray-900 text-white" : "bg-gray-100 text-gray-900"}`}>
+        <Outlet />
+      </main>
     </div>
   );
 };
