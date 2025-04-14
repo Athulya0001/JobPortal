@@ -45,8 +45,12 @@ const RoleSelection = () => {
   };
 
   return (
-    <div className={`flex flex-col items-center justify-start min-h-screen pt-[100px] px-4 ${darkMode ? "bg-gray-900 text-white" : "bg-gray-100 text-gray-900"}`}>
-      <div className={`w-full max-w-md rounded-2xl shadow-lg p-8 transition-all duration-300 ${darkMode ? "bg-gray-800 text-white" : "bg-white text-gray-900"}`}>
+    <div
+      className={`flex flex-col items-center justify-start min-h-screen pt-[100px] px-4 ${darkMode ? "bg-gray-900 text-white" : "bg-gray-100 text-gray-900"}`}
+    >
+      <div
+        className={`w-full max-w-md rounded-2xl shadow-lg p-8 transition-all duration-300 ${darkMode ? "bg-gray-800 text-white" : "bg-white text-gray-900"}`}
+      >
         <h2 className="text-3xl font-extrabold text-center mb-8 tracking-tight">
           Select Your Role
         </h2>
@@ -62,8 +66,8 @@ const RoleSelection = () => {
               onChange={(e) => setRole(e.target.value)}
               required
               className={`w-full rounded-xl border px-4 py-3 text-base font-medium shadow-sm transition-all duration-200 focus:outline-none focus:ring-2 ${darkMode
-                ? "bg-gray-700 border-gray-600 text-white focus:ring-green-500"
-                : "bg-gray-50 border-gray-300 text-gray-800 focus:ring-green-600"
+                ? "bg-gray-700 border-gray-600 text-white focus:ring-[#0096FF]"
+                : "bg-gray-50 border-gray-300 text-gray-800 focus:ring-[#0096FF]"
                 }`}
             >
               <option value="">Select</option>
@@ -74,14 +78,13 @@ const RoleSelection = () => {
 
           <button
             type="submit"
-            className="w-full bg-green-600 hover:bg-green-700 text-white py-3 rounded-xl text-lg font-semibold shadow-md transition-colors duration-200"
+            className="w-full bg-[#0096FF] hover:bg-[#007ACC] text-white py-3 rounded-xl text-lg font-semibold shadow-md transition-colors duration-200"
           >
             Continue
           </button>
         </form>
       </div>
     </div>
-
   );
 };
 

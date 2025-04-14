@@ -19,16 +19,16 @@ const ProfilePage = () => {
   const [formData, setFormData] = useState(
     user?.role === "recruiter"
       ? {
-        companyName: profile?.companyDetails?.name || "",
-        website: profile?.companyDetails?.website || "",
-        location: profile?.companyDetails?.location || "",
-        description: profile?.companyDetails?.description || "",
-        position: profile?.position || "",
-      }
+          companyName: profile?.companyDetails?.name || "",
+          website: profile?.companyDetails?.website || "",
+          location: profile?.companyDetails?.location || "",
+          description: profile?.companyDetails?.description || "",
+          position: profile?.position || "",
+        }
       : {
-        resume: profile?.resume || "",
-        skills: profile?.skills?.join(", ") || "",
-      }
+          resume: profile?.resume || "",
+          skills: profile?.skills?.join(", ") || "",
+        }
   );
 
   const handleChange = (e) => {
@@ -66,14 +66,18 @@ const ProfilePage = () => {
   if (!user || !profile) return <p className="text-center mt-24">Loading profile...</p>;
 
   return (
-    <div className={`min-h-screen pt-[100px] px-4 ${darkMode ? "bg-gray-900 text-white" : "bg-gray-100 text-gray-900"}`}>
-      <div className="max-w-2xl mx-auto rounded-2xl shadow-xl p-8 transition-all duration-300 bg-opacity-95 backdrop-blur-md">
+    <div
+      className={`min-h-screen pt-[100px] px-4 ${darkMode ? "bg-gray-900 text-white" : "bg-gray-100 text-gray-900"}`}
+    >
+      <div
+        className={`max-w-2xl mx-auto rounded-2xl shadow-xl p-8 transition-all duration-300 ${darkMode ? "bg-gray-800" : "bg-white"} bg-opacity-95 backdrop-blur-md`}
+      >
         <div className="flex justify-between items-center mb-6">
           <h1 className="text-3xl font-bold">Profile Details</h1>
           {!editMode && (
             <button
               onClick={() => setEditMode(true)}
-              className="text-green-600 hover:text-green-700 text-2xl"
+              className="text-[#0096FF] hover:text-[#007acc] text-2xl"
               title="Edit Profile"
             >
               <FaUserEdit />
@@ -96,21 +100,21 @@ const ProfilePage = () => {
                 </p>
                 <p><strong>Position:</strong> {profile?.position || "N/A"}</p>
                 <div className={`flex flex-col gap-2 p-4 rounded-xl shadow-md ${darkMode ? "bg-gray-800 text-white" : "bg-gray-100 text-gray-900"}`}>
-                  <h2 className="text-2xl font-semibold mb-2 border-b pb-1 border-green-500">About Company</h2>
+                  <h2 className="text-2xl font-semibold mb-2 border-b pb-1 border-[#0096FF]">About Company</h2>
 
                   <p className="text-base">
-                    <span className="font-medium text-green-600">Description:</span>{" "}
+                    <span className="font-medium text-[#0096FF]">Description:</span>{" "}
                     {profile?.companyDetails?.description || <span className="italic text-gray-400">N/A</span>}
                   </p>
 
                   <p className="text-base">
-                    <span className="font-medium text-green-600">Website:</span>{" "}
+                    <span className="font-medium text-[#0096FF]">Website:</span>{" "}
                     {profile?.companyDetails?.website ? (
                       <a
                         href={profile.companyDetails.website}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="text-blue-500 hover:underline"
+                        className="text-[#0096FF] hover:underline"
                       >
                         {profile.companyDetails.website}
                       </a>
@@ -145,7 +149,7 @@ const ProfilePage = () => {
               </>
             )}
             <div className="flex gap-4 mt-4">
-              <button type="submit" disabled={loading} className="bg-green-600 hover:bg-green-700 text-white py-2 px-4 rounded-md transition-all duration-200">
+              <button type="submit" disabled={loading} className="bg-[#0096FF] hover:bg-[#007acc] text-white py-2 px-4 rounded-md transition-all duration-200">
                 {loading ? "Saving..." : "Save"}
               </button>
               <button type="button" onClick={() => setEditMode(false)} className="bg-gray-400 hover:bg-gray-500 text-white py-2 px-4 rounded-md transition-all duration-200">
