@@ -5,18 +5,20 @@ import { useUser, useClerk } from "@clerk/clerk-react";
 import { SignedIn, SignedOut } from "@clerk/clerk-react";
 import { Link, useNavigate } from "react-router-dom";
 import { FaUser, FaSignOutAlt, FaTachometerAlt } from 'react-icons/fa';
+import Logo from "../Logo/Logo";
 
 const Navbar = () => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [showNavbar, setShowNavbar] = useState(true);
+  const [lastScrollY, setLastScrollY] = useState(0);
+
   const { darkMode, setDarkMode } = useContext(ThemeContext);
   const { isSignedIn, user } = useUser();
   const { signOut } = useClerk();
   const navigate = useNavigate();
   const dropdownRef = useRef(null);
 
-  const handleAvatarClick = () => {
-    setIsDropdownOpen((prev) => !prev);
-  };
+  const handleAvatarClick = () => setIsDropdownOpen(prev => !prev);
 
   const handleSignOut = async () => {
     await signOut();
@@ -30,21 +32,41 @@ const Navbar = () => {
   };
 
   useEffect(() => {
+    const handleScroll = () => {
+      const currentY = window.scrollY;
+      setShowNavbar(currentY < lastScrollY || currentY < 10);
+      setLastScrollY(currentY);
+    };
+
+    const handleMouseMove = (e) => {
+      if (e.clientY < 30) setShowNavbar(true);
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    window.addEventListener("mousemove", handleMouseMove);
     document.addEventListener("mousedown", closeDropdown);
-    return () => document.removeEventListener("mousedown", closeDropdown);
-  }, []);
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+      window.removeEventListener("mousemove", handleMouseMove);
+      document.removeEventListener("mousedown", closeDropdown);
+    };
+  }, [lastScrollY]);
 
   return (
-    <nav className={`fixed z-50 top-0 left-0 w-full p-4 shadow-lg ${darkMode ? "bg-green-700 text-black" : "bg-green-500 text-white"}`}>
+    <nav
+      className={`fixed z-50 top-0 left-0 w-full p-4 shadow-md transition-all duration-500 ease-in-out transform ${showNavbar ? 'translate-y-0 opacity-100' : '-translate-y-full opacity-0'} ${darkMode ? "bg-black/30 text-white" : "bg-white/30 text-black"}`}
+    >
       <div className="container mx-auto flex justify-between items-center">
-        <Link to='/'>
-          <h1 className={`text-3xl font-bold ${darkMode ? "text-black" : "text-white"}`}>
-            ne<span className="text-3xl text-green-900">X</span>tHire
-          </h1>
+        <Link to="/">
+          <Logo />
         </Link>
 
         <div className="flex items-center space-x-4 relative">
-          <button onClick={() => setDarkMode(!darkMode)} className={`text-xl ${darkMode ? "text-black" : "text-white"}`}>
+          <button
+            onClick={() => setDarkMode(!darkMode)}
+            className={`text-xl text-[#0096FF] hover:text-blue-400 transition`}
+          >
             {darkMode ? <FaSun /> : <FaMoon />}
           </button>
 
@@ -54,50 +76,37 @@ const Navbar = () => {
                 src={user?.imageUrl}
                 alt="avatar"
                 onClick={handleAvatarClick}
-                className="w-10 h-10 rounded-full cursor-pointer border-2 border-white"
+                className="w-10 h-10 rounded-full cursor-pointer border-2 border-blue-600"
               />
-
               {isDropdownOpen && (
-                <div
-                  className={`absolute right-0 mt-2 w-56 rounded-xl shadow-xl z-50 transition-all duration-30 ${darkMode ? 'bg-gray-900 text-white border border-gray-700' : 'bg-white text-gray-800 border border-gray-200'} `}
-                >
+                <div className={`absolute right-0 mt-2 w-56 rounded-xl shadow-xl z-50 transition-all duration-300 ${darkMode ? "bg-gray-800 text-white border border-gray-700" : "bg-white text-black border border-gray-300"}`}>
                   <button
                     onClick={() => {
                       navigate("/dashboard");
                       setIsDropdownOpen(false);
                     }}
-                    className="w-full flex items-center gap-3 text-left px-5 py-3 text-sm hover:bg-green-600 hover:text-white transition rounded-t-xl"
+                    className="w-full flex items-center gap-3 text-left px-5 py-3 text-sm hover:bg-blue-100 dark:hover:bg-blue-700 hover:text-blue-700 dark:hover:text-white transition rounded-t-xl"
                   >
-                    <FaTachometerAlt className="text-lg" />
+                    <FaTachometerAlt className="text-lg text-[#0096FF]" />
                     Go to Dashboard
                   </button>
-
-                  <button
-                    onClick={() => {
-                      navigate("/dashboard/profile");
-                      setIsDropdownOpen(false);
-                    }}
-                    className="w-full flex items-center gap-3 text-left px-5 py-3 text-sm hover:bg-green-600 hover:text-white transition"
-                  >
-                    <FaUser className="text-lg" />
-                    View Profile
-                  </button>
-
                   <button
                     onClick={handleSignOut}
-                    className="w-full flex items-center gap-3 text-left px-5 py-3 text-sm text-red-500 hover:bg-red-100 hover:text-red-700 dark:hover:bg-red-700 dark:hover:text-white transition rounded-b-xl"
+                    className="w-full flex items-center gap-3 text-left px-5 py-3 text-sm text-red-500 hover:bg-red-100 dark:hover:bg-red-700 hover:text-red-700 dark:hover:text-white transition rounded-b-xl"
                   >
                     <FaSignOutAlt className="text-lg" />
                     Logout
                   </button>
                 </div>
               )}
-
             </div>
           </SignedIn>
 
           <SignedOut>
-            <a href='/auth' className={`text-xl underline cursor-pointer ${darkMode ? "text-black hover:text-gray-700" : "text-white hover:text-gray-100"}`}>
+            <a
+              href="/auth"
+              className="text-xl underline cursor-pointer text-[#0096FF] hover:text-[#89CFF0] transition"
+            >
               Sign In
             </a>
           </SignedOut>

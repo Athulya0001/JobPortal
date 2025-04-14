@@ -27,7 +27,7 @@ const AuthPage = () => {
   }, [isSignedIn, user, dispatch, navigate]);
 
   return (
-    <div className="flex mt-[85px] flex-col items-center justify-center min-h-screen bg-gray-100">
+    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
       {isSignUp ? <SignUp /> : <SignIn />}
       <button
         onClick={() => setIsSignUp(!isSignUp)}

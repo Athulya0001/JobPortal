@@ -1,7 +1,8 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
-  jobs: [],
+  jobs: [],        // recruiter-specific jobs
+  allJobs: [],     // all jobs for guest/candidate view
 };
 
 const jobSlice = createSlice({
@@ -10,6 +11,9 @@ const jobSlice = createSlice({
   reducers: {
     setJobs: (state, action) => {
       state.jobs = action.payload;
+    },
+    setAllJobs: (state, action) => {
+      state.allJobs = action.payload;
     },
     addJob: (state, action) => {
       state.jobs.push(action.payload);
@@ -23,8 +27,12 @@ const jobSlice = createSlice({
     removeJob: (state, action) => {
       state.jobs = state.jobs.filter(job => job._id !== action.payload);
     },
+    clearJobs: (state) => {
+      state.jobs = [];
+      state.allJobs = [];
+    },
   },
 });
 
-export const { setJobs, addJob, updateJob, removeJob } = jobSlice.actions;
+export const { setJobs, setAllJobs, addJob, updateJob, removeJob, clearJobs } = jobSlice.actions;
 export default jobSlice.reducer;

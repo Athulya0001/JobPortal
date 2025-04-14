@@ -66,62 +66,32 @@ export const getUserData = async (req, res) => {
 
 // profile updating
 export const completeProfile = async (req, res) => {
+  const { userId, clerkId, role, skills, ...profileData } = req.body;
+
   try {
-    const { userId, clerkId, role, ...details } = req.body;
-    if (!userId) return res.status(400).json({ success: false, error: "User ID is required" });
+    const user = await User.findById(userId);
 
-    const updatedUser = await User.findById(userId);
-    if (!updatedUser) return res.status(404).json({ success: false, error: "User not found" });
+    if (req.file) {
+      const resumeUrl = req.file.path;
 
-    let profileDoc;
-
-    if (role === "recruiter") {
-      const recruiterData = {
-        companyDetails: {
-          name: details.companyName,
-          website: details.website,
-          location: details.location,
-          description: details.description,
-        },
-        position: details.position,
-        clerkId,
-        profileComplete: true,
-      };
-
-      profileDoc = await Recruiter.findOneAndUpdate(
-        { user: userId },
-        recruiterData,
-        { upsert: true, new: true }
-      );
-
-    } else if (role === "candidate") {
-      const candidateData = {
-        resume: details.resume,
-        skills: details.skills,
-        clerkId,
-        profileComplete: true,
-      };
-
-      profileDoc = await Candidate.findOneAndUpdate(
-        { user: userId },
-        candidateData,
-        { upsert: true, new: true }
-      );
-
-    } else {
-      return res.status(400).json({ success: false, error: "Invalid role" });
+      if (role === "candidate") {
+        user.candidateProfile = { ...profileData, resume: resumeUrl, skills: JSON.parse(skills) };
+      } else if (role === "recruiter") {
+        user.recruiterProfile = { ...profileData };
+      }
     }
 
-    return res.status(200).json({
-      success: true,
-      message: "Profile updated successfully",
-      user: updatedUser,
-      profile: profileDoc,
-      profileComplete: true,
-    });
+    user.profileComplete = true;
+    await user.save();
 
+    res.status(200).json({
+      success: true,
+      user,
+      profileComplete: true,
+      profile: user[role + "Profile"],
+    });
   } catch (error) {
-    console.error("Profile update error:", error);
-    return res.status(500).json({ success: false, error: "Internal server error" });
+    console.error("Error saving profile", error);
+    res.status(500).json({ success: false, message: "Server error" });
   }
 };
