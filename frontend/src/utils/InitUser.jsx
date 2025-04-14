@@ -10,38 +10,38 @@ const InitUser = ({ children }) => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    const fetchUserFromBackend = async () => {
-      if (!isSignedIn || !user) return;
-
-      try {
-        const token = await getToken();
-        const res = await axios.get(`http://localhost:4000/api/user/${user.id}`, {
-          headers: { Authorization: `Bearer ${token}` },
-        });
-
-        const mongoUser = res.data.user;
-        const profile = res.data.profile;
-        const profileComplete = res.data.profileComplete;
-
-        dispatch(
-          setUser({
-            _id: mongoUser._id,
-            clerkId: mongoUser.clerkId,
-            email: mongoUser.email,
-            profileImage: mongoUser.profileImage,
-            name: mongoUser.name,
-            role: mongoUser.role,
-            profileComplete,
-            profile,
-          })
-        );
-      } catch (error) {
-        console.error("Error loading user from backend:", error.message);
-      }
-    };
-
     fetchUserFromBackend();
   }, [isSignedIn, user, dispatch]);
+
+  const fetchUserFromBackend = async () => {
+    if (!isSignedIn || !user) return;
+
+    try {
+      const token = await getToken();
+      const res = await axios.get(`http://localhost:4000/api/user/${user.id}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+
+      const mongoUser = res.data.user;
+      const profile = res.data.profile;
+      const profileComplete = res.data.profileComplete;
+
+      dispatch(
+        setUser({
+          _id: mongoUser._id,
+          clerkId: mongoUser.clerkId,
+          email: mongoUser.email,
+          profileImage: mongoUser.profileImage,
+          name: mongoUser.name,
+          role: mongoUser.role,
+          profileComplete,
+          profile,
+        })
+      );
+    } catch (error) {
+      console.error("Error loading user from backend:", error.message);
+    }
+  };
 
   return children;
 };
