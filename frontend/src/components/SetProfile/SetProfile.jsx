@@ -88,6 +88,7 @@ const SetProfile = () => {
 
       if (response.data.success) {
         toast.success("Profile updated successfully");
+        console.log(response.data.profile)
 
         dispatch(
           setUser({

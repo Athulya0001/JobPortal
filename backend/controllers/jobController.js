@@ -1,16 +1,26 @@
 import Job from "../models/jobModel.js";
+import Recruiter from "../models/recruiterModel.js";
 
 // add jobs
 export const addJob = async (req, res) => {
   try {
-    const { title, description, skillsRequired, numberOfVacancies, salary, thumbnail, createdBy } = req.body;
+    const { title, description, skillsRequired, numberOfVacancies, salary, createdBy } = req.body;
+    const thumbnail = req.file?.path; 
 
-    if (!title || !description || !skillsRequired || !numberOfVacancies || !createdBy) {
+    if (
+      !title ||
+      !description ||
+      !skillsRequired ||
+      !numberOfVacancies ||
+      !createdBy ||
+      !thumbnail
+    ) {
       return res.status(400).json({ success: false, message: "Missing required fields" });
     }
 
-    const existingJob = await Job.findOne({ title, createdBy });
+    const parsedSkills = JSON.parse(skillsRequired);
 
+    const existingJob = await Job.findOne({ title, createdBy });
     if (existingJob) {
       return res.status(400).json({ success: false, message: "Job with this title already exists for this recruiter" });
     }
@@ -18,18 +28,28 @@ export const addJob = async (req, res) => {
     const newJob = new Job({
       title,
       description,
-      skillsRequired,
+      skillsRequired: parsedSkills,
       numberOfVacancies,
       salary,
-      thumbnail,
       createdBy,
+      thumbnail,
     });
 
     await newJob.save();
-    res.status(201).json({ success: true, message: "Job created successfully", job: newJob });
+
+    await Recruiter.findByIdAndUpdate(createdBy, {
+      $push: { createdJobs: newJob._id },
+    });
+
+    return res.status(201).json({
+      success: true,
+      message: "Job created successfully",
+      job: newJob,
+    });
+
   } catch (error) {
     console.error("Error adding job:", error);
-    res.status(500).json({ success: false, message: "Server error" });
+    return res.status(500).json({ success: false, message: "Server error" });
   }
 };
 

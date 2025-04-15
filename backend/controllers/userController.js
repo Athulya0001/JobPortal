@@ -69,29 +69,66 @@ export const completeProfile = async (req, res) => {
   const { userId, clerkId, role, skills, ...profileData } = req.body;
 
   try {
+    if (!userId) return res.status(400).json({ success: false, error: "User ID is required" });
+
     const user = await User.findById(userId);
+    if (!user) return res.status(404).json({ success: false, error: "User not found" });
 
-    if (req.file) {
-      const resumeUrl = req.file.path;
+    let profileDoc;
 
-      if (role === "candidate") {
-        user.candidateProfile = { ...profileData, resume: resumeUrl, skills: JSON.parse(skills) };
-      } else if (role === "recruiter") {
-        user.recruiterProfile = { ...profileData };
-      }
+    if (role === "candidate") {
+      const resumeUrl = req.file ? req.file.path : profileData.resume;
+
+      const candidateData = {
+        resume: resumeUrl,
+        skills: JSON.parse(skills),
+        ...profileData,
+        clerkId,
+        profileComplete: true,
+        user: userId,
+      };
+
+      profileDoc = await Candidate.findOneAndUpdate(
+        { user: userId },
+        candidateData,
+        { upsert: true, new: true }
+      );
+    } 
+    else if (role === "recruiter") {
+      const recruiterData = {
+        companyDetails: {
+          name: profileData.companyName,
+          website: profileData.website,
+          location: profileData.location,
+          description: profileData.description,
+        },
+        position: profileData.position,
+        clerkId,
+        profileComplete: true,
+        user: userId,
+      };
+
+      profileDoc = await Recruiter.findOneAndUpdate(
+        { user: userId },
+        recruiterData,
+        { upsert: true, new: true }
+      );
+    } else {
+      return res.status(400).json({ success: false, error: "Invalid role" });
     }
 
     user.profileComplete = true;
     await user.save();
 
-    res.status(200).json({
+    return res.status(200).json({
       success: true,
+      message: "Profile completed successfully",
       user,
+      profile: profileDoc,
       profileComplete: true,
-      profile: user[role + "Profile"],
     });
   } catch (error) {
-    console.error("Error saving profile", error);
-    res.status(500).json({ success: false, message: "Server error" });
+    console.error("Error completing profile:", error);
+    return res.status(500).json({ success: false, message: "Internal server error" });
   }
 };

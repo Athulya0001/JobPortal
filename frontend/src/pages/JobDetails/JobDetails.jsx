@@ -45,7 +45,7 @@ const JobDetails = () => {
   if (!job) return <p className="text-center mt-[85px] text-red-500">Job not found.</p>;
 
   return (
-    <div className={`${darkMode ? 'bg-gray-900 text-white' : 'bg-white text-gray-900'}`}>
+    <div className={ `min-h-screen ${darkMode ? 'bg-gray-900 text-white' : 'bg-white text-gray-900'}`}>
       <div className={`mx-auto pt-[80px] px-6 py-5`}>
         <h1 className="text-3xl font-bold mb-4">{job.title}</h1>
         <h2 className="text-xl font-semibold mb-2 text-green-600">{job.createdBy?.name}</h2>
@@ -62,17 +62,17 @@ const JobDetails = () => {
 
         <div className="mb-6">
           <h3 className="text-lg font-semibold mb-1">Description:</h3>
-          <p className="text-gray-600 leading-relaxed">{job.description}</p>
+          <p className="opacity-70 leading-relaxed">{job.description}</p>
         </div>
 
         <div className="mb-6">
           <h3 className="text-lg font-semibold mb-1">Skills Required:</h3>
-          <p className="text-gray-600">{job.skillsRequired.join(', ')}</p>
+          <p className="opacity-70">{job.skillsRequired.join(', ')}</p>
         </div>
 
         <div className="mb-6">
           <h3 className="text-lg font-semibold mb-1">Vacancies:</h3>
-          <p className="text-gray-600">{job.numberOfVacancies}</p>
+          <p className="opacity-70">{job.numberOfVacancies}</p>
         </div>
 
         <div className="text-center mt-6">

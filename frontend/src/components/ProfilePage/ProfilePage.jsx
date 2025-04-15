@@ -19,16 +19,16 @@ const ProfilePage = () => {
   const [formData, setFormData] = useState(
     user?.role === "recruiter"
       ? {
-          companyName: profile?.companyDetails?.name || "",
-          website: profile?.companyDetails?.website || "",
-          location: profile?.companyDetails?.location || "",
-          description: profile?.companyDetails?.description || "",
-          position: profile?.position || "",
-        }
+        companyName: profile?.companyDetails?.name || "",
+        website: profile?.companyDetails?.website || "",
+        location: profile?.companyDetails?.location || "",
+        description: profile?.companyDetails?.description || "",
+        position: profile?.position || "",
+      }
       : {
-          resume: profile?.resume || "",
-          skills: profile?.skills?.join(", ") || "",
-        }
+        resume: profile?.resume || "",
+        skills: profile?.skills?.join(", ") || "",
+      }
   );
 
   const handleChange = (e) => {
@@ -67,13 +67,13 @@ const ProfilePage = () => {
 
   return (
     <div
-      className={`min-h-screen pt-[100px] px-4 ${darkMode ? "bg-gray-900 text-white" : "bg-gray-100 text-gray-900"}`}
+      className={`min-h-screen flex items-center justify-center px-4 ${darkMode ? "bg-gray-900 text-white" : "bg-gray-100 text-gray-900"}`}
     >
       <div
-        className={`max-w-2xl mx-auto rounded-2xl shadow-xl p-8 transition-all duration-300 ${darkMode ? "bg-gray-800" : "bg-white"} bg-opacity-95 backdrop-blur-md`}
+        className={`max-w-3xl w-full rounded-2xl shadow-2xl p-8 transition-all duration-300 ${darkMode ? "bg-gray-800" : "bg-white"} bg-opacity-95 backdrop-blur-md`}
       >
-        <div className="flex justify-between items-center mb-6">
-          <h1 className="text-3xl font-bold">Profile Details</h1>
+        <div className="flex justify-between items-center mb-8">
+          <h1 className="text-4xl font-semibold text-[#0096FF]">Profile Details</h1>
           {!editMode && (
             <button
               onClick={() => setEditMode(true)}
@@ -86,27 +86,30 @@ const ProfilePage = () => {
         </div>
 
         {!editMode ? (
-          <div className="space-y-4 text-lg">
-            <p><strong>Email:</strong> {user.email}</p>
-            <p><strong>Role:</strong> {user.role}</p>
+          <div className="space-y-6">
+            <div className="flex flex-col gap-2">
+              <p className="text-lg font-semibold"><strong>Email:</strong> {user.email}</p>
+              <p className="text-lg font-semibold"><strong>Role:</strong> {user.role}</p>
+            </div>
 
             {user.role === "recruiter" ? (
-              <>
-                <p className="flex items-center gap-2">
-                  <FaBuilding /> {profile?.companyDetails?.name || "N/A"}
-                </p>
-                <p className="flex items-center gap-2">
-                  <FaMapMarkerAlt /> {profile?.companyDetails?.location || "N/A"}
-                </p>
-                <p><strong>Position:</strong> {profile?.position || "N/A"}</p>
-                <div className={`flex flex-col gap-2 p-4 rounded-xl shadow-md ${darkMode ? "bg-gray-800 text-white" : "bg-gray-100 text-gray-900"}`}>
-                  <h2 className="text-2xl font-semibold mb-2 border-b pb-1 border-[#0096FF]">About Company</h2>
+              <div className="space-y-6">
+                <div className="flex flex-col gap-2">
+                  <p className="flex items-center gap-2 text-lg">
+                    <FaBuilding /> {profile?.companyDetails?.name || "N/A"}
+                  </p>
+                  <p className="flex items-center gap-2 text-lg">
+                    <FaMapMarkerAlt /> {profile?.companyDetails?.location || "N/A"}
+                  </p>
+                  <p className="text-lg font-semibold"><strong>Position:</strong> {profile?.position || "N/A"}</p>
+                </div>
 
+                <div className={`flex flex-col gap-2 p-6 rounded-xl shadow-md ${darkMode ? "bg-gray-800 text-white" : "bg-gray-100 text-gray-900"}`}>
+                  <h2 className="text-2xl font-semibold mb-4 text-[#0096FF]">About Company</h2>
                   <p className="text-base">
                     <span className="font-medium text-[#0096FF]">Description:</span>{" "}
                     {profile?.companyDetails?.description || <span className="italic text-gray-400">N/A</span>}
                   </p>
-
                   <p className="text-base">
                     <span className="font-medium text-[#0096FF]">Website:</span>{" "}
                     {profile?.companyDetails?.website ? (
@@ -123,36 +126,96 @@ const ProfilePage = () => {
                     )}
                   </p>
                 </div>
-
-              </>
+              </div>
             ) : (
-              <>
-                <p className="flex items-center gap-2"><FaFileAlt /> {profile?.resume || "N/A"}</p>
-                <p className="flex items-center gap-2"><FaTools /> {profile?.skills?.join(", ") || "N/A"}</p>
-              </>
+              <div className="space-y-4">
+                <p className="flex items-center gap-2 text-lg">
+                  <FaFileAlt /> {profile?.resume || "N/A"}
+                </p>
+                <p className="flex items-center gap-2 text-lg">
+                  <FaTools /> {profile?.skills?.join(", ") || "N/A"}
+                </p>
+              </div>
             )}
           </div>
         ) : (
           <form onSubmit={handleUpdate} className="space-y-4 text-base">
             {user.role === "recruiter" ? (
-              <>
-                <input type="text" name="companyName" value={formData.companyName} onChange={handleChange} placeholder="Company Name" className="w-full p-2 rounded-md border" />
-                <input type="text" name="website" value={formData.website} onChange={handleChange} placeholder="Company Website" className="w-full p-2 rounded-md border" />
-                <input type="text" name="location" value={formData.location} onChange={handleChange} placeholder="Company Location" className="w-full p-2 rounded-md border" />
-                <textarea name="description" value={formData.description} onChange={handleChange} placeholder="Company Description" className="w-full p-2 rounded-md border resize-none" />
-                <input type="text" name="position" value={formData.position} onChange={handleChange} placeholder="Your Position" className="w-full p-2 rounded-md border" />
-              </>
+              <div className="space-y-4">
+                <input
+                  type="text"
+                  name="companyName"
+                  value={formData.companyName}
+                  onChange={handleChange}
+                  placeholder="Company Name"
+                  className="w-full p-3 rounded-md border shadow-md focus:outline-none focus:ring-2 focus:ring-[#0096FF]"
+                />
+                <input
+                  type="text"
+                  name="website"
+                  value={formData.website}
+                  onChange={handleChange}
+                  placeholder="Company Website"
+                  className="w-full p-3 rounded-md border shadow-md focus:outline-none focus:ring-2 focus:ring-[#0096FF]"
+                />
+                <input
+                  type="text"
+                  name="location"
+                  value={formData.location}
+                  onChange={handleChange}
+                  placeholder="Company Location"
+                  className="w-full p-3 rounded-md border shadow-md focus:outline-none focus:ring-2 focus:ring-[#0096FF]"
+                />
+                <textarea
+                  name="description"
+                  value={formData.description}
+                  onChange={handleChange}
+                  placeholder="Company Description"
+                  className="w-full p-3 rounded-md border shadow-md focus:outline-none focus:ring-2 focus:ring-[#0096FF] resize-none"
+                />
+                <input
+                  type="text"
+                  name="position"
+                  value={formData.position}
+                  onChange={handleChange}
+                  placeholder="Your Position"
+                  className="w-full p-3 rounded-md border shadow-md focus:outline-none focus:ring-2 focus:ring-[#0096FF]"
+                />
+              </div>
             ) : (
-              <>
-                <input type="text" name="resume" value={formData.resume} onChange={handleChange} placeholder="Resume Link" className="w-full p-2 rounded-md border" />
-                <input type="text" name="skills" value={formData.skills} onChange={handleChange} placeholder="Skills (comma-separated)" className="w-full p-2 rounded-md border" />
-              </>
+              <div className="space-y-4">
+                <input
+                  type="text"
+                  name="resume"
+                  value={formData.resume}
+                  onChange={handleChange}
+                  placeholder="Resume Link"
+                  className="w-full p-3 rounded-md border shadow-md focus:outline-none focus:ring-2 focus:ring-[#0096FF]"
+                />
+                <input
+                  type="text"
+                  name="skills"
+                  value={formData.skills}
+                  onChange={handleChange}
+                  placeholder="Skills (comma-separated)"
+                  className="w-full p-3 rounded-md border shadow-md focus:outline-none focus:ring-2 focus:ring-[#0096FF]"
+                />
+              </div>
             )}
-            <div className="flex gap-4 mt-4">
-              <button type="submit" disabled={loading} className="bg-[#0096FF] hover:bg-[#007acc] text-white py-2 px-4 rounded-md transition-all duration-200">
+
+            <div className="flex gap-6 mt-6 justify-center">
+              <button
+                type="submit"
+                disabled={loading}
+                className="bg-[#0096FF] hover:bg-[#007acc] text-white py-3 px-6 rounded-md transition-all duration-200 text-lg"
+              >
                 {loading ? "Saving..." : "Save"}
               </button>
-              <button type="button" onClick={() => setEditMode(false)} className="bg-gray-400 hover:bg-gray-500 text-white py-2 px-4 rounded-md transition-all duration-200">
+              <button
+                type="button"
+                onClick={() => setEditMode(false)}
+                className="bg-gray-400 hover:bg-gray-500 text-white py-3 px-6 rounded-md transition-all duration-200 text-lg"
+              >
                 Cancel
               </button>
             </div>
