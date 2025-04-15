@@ -9,12 +9,12 @@ export const register = async (req, res) => {
     const { clerkId, name, email, profileImage, role } = req.body;
 
     if (!role) {
-      return res.status(400).json({ success:false, error: "Role is required" });
+      return res.status(400).json({ success: false, error: "Role is required" });
     }
 
     let existingUser = await User.findOne({ clerkId });
     if (existingUser) {
-      return res.status(404).json({ success:false, error: "User already exists", user: existingUser });
+      return res.status(404).json({ success: false, error: "User already exists", user: existingUser });
     }
 
     const newUser = new User({
@@ -48,9 +48,9 @@ export const getUserData = async (req, res) => {
     let profile = null;
 
     if (user.role === "recruiter") {
-      profile = await Recruiter.findOne({ clerkId:clerkId });
+      profile = await Recruiter.findOne({ clerkId: clerkId });
     } else if (user.role === "candidate") {
-      profile = await Candidate.findOne({ clerkId:clerkId });
+      profile = await Candidate.findOne({ clerkId: clerkId });
     }
 
     return res.status(200).json({
@@ -75,13 +75,22 @@ export const completeProfile = async (req, res) => {
     if (!user) return res.status(404).json({ success: false, error: "User not found" });
 
     let profileDoc;
+    let resumeUrl;
 
     if (role === "candidate") {
-      const resumeUrl = req.file ? req.file.path : profileData.resume;
+      resumeUrl = req.file ? req.file.path : profileData.resume;
+      console.log("Uploaded File:", req.file);
+
+      let parsedSkills;
+      try {
+        parsedSkills = typeof skills === "string" ? JSON.parse(skills) : skills;
+      } catch (error) {
+        return res.status(400).json({ success: false, error: "Invalid skills format" });
+      }
 
       const candidateData = {
         resume: resumeUrl,
-        skills: JSON.parse(skills),
+        skills: parsedSkills,
         ...profileData,
         clerkId,
         profileComplete: true,
@@ -93,7 +102,7 @@ export const completeProfile = async (req, res) => {
         candidateData,
         { upsert: true, new: true }
       );
-    } 
+    }
     else if (role === "recruiter") {
       const recruiterData = {
         companyDetails: {

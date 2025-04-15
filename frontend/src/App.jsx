@@ -20,6 +20,7 @@ import { ThemeContext } from "./Context/ThemeContext";
 import InitUser from './utils/InitUser';
 import SigninWarn from "./components/SigninWarn/SIgninWarn";
 import DashboardHome from "./components/Dashboard/DashBoardHome";
+import Loading from "./components/Loading/Loading";
 
 function App() {
   const { isSignedIn, user } = useUser();
@@ -54,7 +55,7 @@ function App() {
           <Route path="/" element={<Home />} />
 
           <Route path="/auth" element={!isSignedIn ? <AuthPage /> : <Navigate to="/dashboard" />} />
-          <Route path="/dummy" element={<SetProfile/>}/>
+          <Route path="/dummy" element={<Loading type="bars" />}/>
 
           <Route path="/set-role" element={isSignedIn && !role ? <RoleSelection /> : <Navigate to="/dashboard" />} />
 

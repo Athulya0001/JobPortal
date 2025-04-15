@@ -2,22 +2,21 @@ import multer from "multer";
 import { CloudinaryStorage } from "multer-storage-cloudinary";
 import cloudinary from "./cloudinaryConfig.js";
 
-const pdfStorage = new CloudinaryStorage({
+const dynamicStorage = new CloudinaryStorage({
   cloudinary,
-  params: {
-    folder: "resumes",
-    allowed_formats: ["pdf"],
-    // resource_type: "raw",
-  },
-});
-export const uploadPDF = multer({ storage: pdfStorage });
+  params: async (req, file) => {
+    const isPDF = file.mimetype === "application/pdf";
 
-const imageStorage = new CloudinaryStorage({
-  cloudinary,
-  params: {
-    folder: "profile_images",
-    allowed_formats: ["jpg", "jpeg", "png", "webp","svg"],
-    // transformation: [{ width: 500, height: 500, crop: "limit" }],
+    return {
+      folder: isPDF ? "resumes" : "profile_images",
+      resource_type: isPDF ? "raw" : undefined,
+      format: isPDF ? "pdf" : ["jpg", "jpeg", "png", "webp", "svg"],
+
+      public_id: `${file.originalname
+        .split(".")[0]
+        .replace(/\s+/g, "-")}-${Date.now()}`,
+    };
   },
 });
-export const uploadImage = multer({ storage: imageStorage });
+
+export const uploadFile = multer({ storage: dynamicStorage });

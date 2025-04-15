@@ -18,16 +18,16 @@ const SetProfile = () => {
   const [formData, setFormData] = useState(
     role === "recruiter"
       ? {
-          companyName: "",
-          website: "",
-          location: "",
-          description: "",
-          position: "",
-        }
+        companyName: "",
+        website: "",
+        location: "",
+        description: "",
+        position: "",
+      }
       : {
-          skills: [],
-          resume: null,
-        }
+        skills: [],
+        resume: null,
+      }
   );
 
   const [newSkill, setNewSkill] = useState("");
@@ -110,14 +110,12 @@ const SetProfile = () => {
 
   return (
     <div
-      className={`flex flex-col items-center justify-start min-h-screen pt-[100px] px-4 ${
-        darkMode ? "bg-gray-900 text-white" : "bg-gray-100 text-gray-900"
-      }`}
+      className={`flex flex-col items-center justify-start min-h-screen pt-[100px] px-4 ${darkMode ? "bg-gray-900 text-white" : "bg-gray-100 text-gray-900"
+        }`}
     >
       <div
-        className={`w-full max-w-md rounded-2xl shadow-lg p-8 transition-all duration-300 ${
-          darkMode ? "bg-gray-800 text-white" : "bg-white text-gray-900"
-        }`}
+        className={`w-full max-w-md rounded-2xl shadow-lg p-8 transition-all duration-300 ${darkMode ? "bg-gray-800 text-white" : "bg-white text-gray-900"
+          }`}
       >
         <h2 className="text-2xl font-bold mb-6 text-center">
           Complete Your {role === "recruiter" ? "Recruiter" : "Candidate"} Profile
@@ -133,11 +131,10 @@ const SetProfile = () => {
                 value={formData.companyName}
                 onChange={handleChange}
                 required
-                className={`rounded-xl p-3 border text-base font-medium ${
-                  darkMode
-                    ? "bg-gray-700 border-gray-600 text-white placeholder-gray-400"
-                    : "bg-gray-50 border-gray-300 text-gray-900"
-                }`}
+                className={`rounded-xl p-3 border text-base font-medium ${darkMode
+                  ? "bg-gray-700 border-gray-600 text-white placeholder-gray-400"
+                  : "bg-gray-50 border-gray-300 text-gray-900"
+                  }`}
               />
               <input
                 type="text"
@@ -145,11 +142,10 @@ const SetProfile = () => {
                 placeholder="Company Website"
                 value={formData.website}
                 onChange={handleChange}
-                className={`rounded-xl p-3 border text-base font-medium ${
-                  darkMode
-                    ? "bg-gray-700 border-gray-600 text-white placeholder-gray-400"
-                    : "bg-gray-50 border-gray-300 text-gray-900"
-                }`}
+                className={`rounded-xl p-3 border text-base font-medium ${darkMode
+                  ? "bg-gray-700 border-gray-600 text-white placeholder-gray-400"
+                  : "bg-gray-50 border-gray-300 text-gray-900"
+                  }`}
               />
               <input
                 type="text"
@@ -157,11 +153,10 @@ const SetProfile = () => {
                 placeholder="Company Location"
                 value={formData.location}
                 onChange={handleChange}
-                className={`rounded-xl p-3 border text-base font-medium ${
-                  darkMode
-                    ? "bg-gray-700 border-gray-600 text-white placeholder-gray-400"
-                    : "bg-gray-50 border-gray-300 text-gray-900"
-                }`}
+                className={`rounded-xl p-3 border text-base font-medium ${darkMode
+                  ? "bg-gray-700 border-gray-600 text-white placeholder-gray-400"
+                  : "bg-gray-50 border-gray-300 text-gray-900"
+                  }`}
               />
               <textarea
                 name="description"
@@ -169,11 +164,10 @@ const SetProfile = () => {
                 value={formData.description}
                 onChange={handleChange}
                 rows={4}
-                className={`rounded-xl p-3 border text-base font-medium resize-none ${
-                  darkMode
-                    ? "bg-gray-700 border-gray-600 text-white placeholder-gray-400"
-                    : "bg-gray-50 border-gray-300 text-gray-900"
-                }`}
+                className={`rounded-xl p-3 border text-base font-medium resize-none ${darkMode
+                  ? "bg-gray-700 border-gray-600 text-white placeholder-gray-400"
+                  : "bg-gray-50 border-gray-300 text-gray-900"
+                  }`}
               />
               <input
                 type="text"
@@ -182,11 +176,10 @@ const SetProfile = () => {
                 value={formData.position}
                 onChange={handleChange}
                 required
-                className={`rounded-xl p-3 border text-base font-medium ${
-                  darkMode
-                    ? "bg-gray-700 border-gray-600 text-white placeholder-gray-400"
-                    : "bg-gray-50 border-gray-300 text-gray-900"
-                }`}
+                className={`rounded-xl p-3 border text-base font-medium ${darkMode
+                  ? "bg-gray-700 border-gray-600 text-white placeholder-gray-400"
+                  : "bg-gray-50 border-gray-300 text-gray-900"
+                  }`}
               />
             </>
           ) : (
@@ -198,11 +191,10 @@ const SetProfile = () => {
                   value={newSkill}
                   onChange={(e) => setNewSkill(e.target.value)}
                   placeholder="Enter a skill"
-                  className={`rounded-xl p-3 border text-base font-medium ${
-                    darkMode
+                  className={`rounded-xl p-3 border text-base font-medium ${darkMode
                       ? "bg-gray-700 border-gray-600 text-white placeholder-gray-400"
                       : "bg-gray-50 border-gray-300 text-gray-900"
-                  }`}
+                    }`}
                 />
                 <button
                   type="button"
@@ -213,32 +205,35 @@ const SetProfile = () => {
                 </button>
               </div>
 
-              <ul className="mt-4">
-                {formData.skills.map((skill, index) => (
-                  <li key={index} className="flex justify-between items-center">
-                    <span>{skill}</span>
-                    <button
-                      type="button"
-                      onClick={() => handleRemoveSkill(index)}
-                      className="text-red-500 hover:text-red-700"
+              {formData.skills.length > 0 && (
+                <div className="flex flex-wrap gap-2 mt-4">
+                  {formData.skills.map((skill, index) => (
+                    <span
+                      key={index}
+                      className="bg-blue-100 text-blue-800 px-3 py-1 rounded-xl flex items-center gap-2 text-sm font-medium"
                     >
-                      Remove
-                    </button>
-                  </li>
-                ))}
-              </ul>
-
+                      {skill}
+                      <button
+                        type="button"
+                        onClick={() => handleRemoveSkill(index)}
+                        className="text-red-500 hover:text-red-700 font-bold"
+                      >
+                        &times;
+                      </button>
+                    </span>
+                  ))}
+                </div>
+              )}
               <input
                 type="file"
                 name="resume"
                 accept="application/pdf"
                 onChange={handleFileChange}
                 required
-                className={`rounded-xl p-3 border text-base font-medium ${
-                  darkMode
-                    ? "bg-gray-700 border-gray-600 text-white placeholder-gray-400"
-                    : "bg-gray-50 border-gray-300 text-gray-900"
-                }`}
+                className={`rounded-xl p-3 border text-base font-medium ${darkMode
+                  ? "bg-gray-700 border-gray-600 text-white placeholder-gray-400"
+                  : "bg-gray-50 border-gray-300 text-gray-900"
+                  }`}
               />
             </>
           )}

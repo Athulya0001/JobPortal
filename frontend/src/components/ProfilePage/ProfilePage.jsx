@@ -1,18 +1,25 @@
 import { useState, useContext } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
-import { FaBuilding, FaMapMarkerAlt, FaFileAlt, FaTools, FaUserEdit } from "react-icons/fa";
+import {
+  FaBuilding,
+  FaMapMarkerAlt,
+  FaFileAlt,
+  FaUserEdit,
+} from "react-icons/fa";
 import { ThemeContext } from "../../Context/ThemeContext";
 import { toast } from "react-toastify";
 import { setUser } from "../../Redux/Reducers/authSlice";
+import PdfViewer from "../PdfViewer/PdfViewer";
 
 const ProfilePage = () => {
   const { darkMode } = useContext(ThemeContext);
   const dispatch = useDispatch();
   const user = useSelector((state) => state.auth.user);
-  const profile = user?.role === "recruiter"
-    ? useSelector((state) => state.auth.recruiterProfile)
-    : useSelector((state) => state.auth.candidateProfile);
+  const profile =
+    user?.role === "recruiter"
+      ? useSelector((state) => state.auth.recruiterProfile)
+      : useSelector((state) => state.auth.candidateProfile);
 
   const [editMode, setEditMode] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -26,7 +33,7 @@ const ProfilePage = () => {
         position: profile?.position || "",
       }
       : {
-        resume: profile?.resume || "",
+        resume: null,
         skills: profile?.skills?.join(", ") || "",
       }
   );
@@ -39,20 +46,43 @@ const ProfilePage = () => {
     e.preventDefault();
     setLoading(true);
     try {
-      const response = await axios.post("http://localhost:4000/api/user/complete-profile", {
-        userId: user._id,
-        clerkId: user.clerkId,
-        role: user.role,
-        ...formData,
-      });
+      const formPayload = new FormData();
+      formPayload.append("userId", user._id);
+      formPayload.append("clerkId", user.clerkId);
+      formPayload.append("role", user.role);
+
+      if (user.role === "recruiter") {
+        formPayload.append("companyName", formData.companyName);
+        formPayload.append("website", formData.website);
+        formPayload.append("location", formData.location);
+        formPayload.append("description", formData.description);
+        formPayload.append("position", formData.position);
+      } else {
+        formPayload.append("skills", formData.skills);
+        if (formData.resume instanceof File) {
+          formPayload.append("resume", formData.resume);
+        }
+      }
+
+      const response = await axios.post(
+        "http://localhost:4000/api/user/complete-profile",
+        formPayload,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
 
       if (response.data.success) {
         toast.success("Profile updated!");
-        dispatch(setUser({
-          ...response.data.user,
-          profileComplete: response.data.profileComplete,
-          profile: response.data.profile,
-        }));
+        dispatch(
+          setUser({
+            ...response.data.user,
+            profileComplete: response.data.profileComplete,
+            profile: response.data.profile,
+          })
+        );
         setEditMode(false);
       }
     } catch (error) {
@@ -67,13 +97,17 @@ const ProfilePage = () => {
 
   return (
     <div
-      className={`min-h-screen flex items-center justify-center px-4 ${darkMode ? "bg-gray-900 text-white" : "bg-gray-100 text-gray-900"}`}
+      className={`min-h-screen flex items-center justify-center px-4 ${darkMode ? "bg-gray-900 text-white" : "bg-gray-100 text-gray-900"
+        }`}
     >
       <div
-        className={`max-w-3xl w-full rounded-2xl shadow-2xl p-8 transition-all duration-300 ${darkMode ? "bg-gray-800" : "bg-white"} bg-opacity-95 backdrop-blur-md`}
+        className={`max-w-3xl w-full rounded-2xl shadow-2xl p-8 ${darkMode ? "bg-gray-800" : "bg-white"
+          }`}
       >
         <div className="flex justify-between items-center mb-8">
-          <h1 className="text-4xl font-semibold text-[#0096FF]">Profile Details</h1>
+          <h1 className="text-4xl font-semibold text-[#0096FF]">
+            Profile Details
+          </h1>
           {!editMode && (
             <button
               onClick={() => setEditMode(true)}
@@ -87,30 +121,35 @@ const ProfilePage = () => {
 
         {!editMode ? (
           <div className="space-y-6">
-            <div className="flex flex-col gap-2">
-              <p className="text-lg font-semibold"><strong>Email:</strong> {user.email}</p>
-              <p className="text-lg font-semibold"><strong>Role:</strong> {user.role}</p>
-            </div>
+            <p className="text-lg font-semibold">
+              <strong>Email:</strong> {user.email}
+            </p>
+            <p className="text-lg font-semibold">
+              <strong>Role:</strong> {user.role}
+            </p>
 
             {user.role === "recruiter" ? (
               <div className="space-y-6">
-                <div className="flex flex-col gap-2">
-                  <p className="flex items-center gap-2 text-lg">
-                    <FaBuilding /> {profile?.companyDetails?.name || "N/A"}
-                  </p>
-                  <p className="flex items-center gap-2 text-lg">
-                    <FaMapMarkerAlt /> {profile?.companyDetails?.location || "N/A"}
-                  </p>
-                  <p className="text-lg font-semibold"><strong>Position:</strong> {profile?.position || "N/A"}</p>
-                </div>
-
-                <div className={`flex flex-col gap-2 p-6 rounded-xl shadow-md ${darkMode ? "bg-gray-800 text-white" : "bg-gray-100 text-gray-900"}`}>
-                  <h2 className="text-2xl font-semibold mb-4 text-[#0096FF]">About Company</h2>
-                  <p className="text-base">
+                <p className="flex items-center gap-2 text-lg">
+                  <FaBuilding /> {profile?.companyDetails?.name || "N/A"}
+                </p>
+                <p className="flex items-center gap-2 text-lg">
+                  <FaMapMarkerAlt /> {profile?.companyDetails?.location || "N/A"}
+                </p>
+                <p className="text-lg font-semibold">
+                  <strong>Position:</strong> {profile?.position || "N/A"}
+                </p>
+                <div className="p-6 rounded-xl shadow-md bg-opacity-95">
+                  <h2 className="text-2xl font-semibold mb-4 text-[#0096FF]">
+                    About Company
+                  </h2>
+                  <p>
                     <span className="font-medium text-[#0096FF]">Description:</span>{" "}
-                    {profile?.companyDetails?.description || <span className="italic text-gray-400">N/A</span>}
+                    {profile?.companyDetails?.description || (
+                      <span className="italic text-gray-400">N/A</span>
+                    )}
                   </p>
-                  <p className="text-base">
+                  <p>
                     <span className="font-medium text-[#0096FF]">Website:</span>{" "}
                     {profile?.companyDetails?.website ? (
                       <a
@@ -130,25 +169,31 @@ const ProfilePage = () => {
             ) : (
               <div className="space-y-4">
                 <p className="flex items-center gap-2 text-lg">
-                  <FaFileAlt /> {profile?.resume || "N/A"}
+                  <FaFileAlt /> <strong>Resume:</strong>
                 </p>
-                <p className="flex items-center gap-2 text-lg">
-                  <FaTools /> {profile?.skills?.join(", ") || "N/A"}
-                </p>
+                <div className="flex justify-center">
+                  <iframe
+                    src="https://res.cloudinary.com/dobsucixf/raw/upload/v1744716935/resumes/rgvhbgtl4dcycvcl5tsg"
+                    title="Resume Preview"
+                    width="100%"
+                    height="500px"
+                    className="rounded-md shadow-lg border"
+                  ></iframe>
+                </div>
               </div>
             )}
           </div>
         ) : (
           <form onSubmit={handleUpdate} className="space-y-4 text-base">
             {user.role === "recruiter" ? (
-              <div className="space-y-4">
+              <>
                 <input
                   type="text"
                   name="companyName"
                   value={formData.companyName}
                   onChange={handleChange}
                   placeholder="Company Name"
-                  className="w-full p-3 rounded-md border shadow-md focus:outline-none focus:ring-2 focus:ring-[#0096FF]"
+                  className="w-full p-3 rounded-md border shadow-md"
                 />
                 <input
                   type="text"
@@ -156,7 +201,7 @@ const ProfilePage = () => {
                   value={formData.website}
                   onChange={handleChange}
                   placeholder="Company Website"
-                  className="w-full p-3 rounded-md border shadow-md focus:outline-none focus:ring-2 focus:ring-[#0096FF]"
+                  className="w-full p-3 rounded-md border shadow-md"
                 />
                 <input
                   type="text"
@@ -164,14 +209,14 @@ const ProfilePage = () => {
                   value={formData.location}
                   onChange={handleChange}
                   placeholder="Company Location"
-                  className="w-full p-3 rounded-md border shadow-md focus:outline-none focus:ring-2 focus:ring-[#0096FF]"
+                  className="w-full p-3 rounded-md border shadow-md"
                 />
                 <textarea
                   name="description"
                   value={formData.description}
                   onChange={handleChange}
                   placeholder="Company Description"
-                  className="w-full p-3 rounded-md border shadow-md focus:outline-none focus:ring-2 focus:ring-[#0096FF] resize-none"
+                  className="w-full p-3 rounded-md border shadow-md resize-none"
                 />
                 <input
                   type="text"
@@ -179,28 +224,33 @@ const ProfilePage = () => {
                   value={formData.position}
                   onChange={handleChange}
                   placeholder="Your Position"
-                  className="w-full p-3 rounded-md border shadow-md focus:outline-none focus:ring-2 focus:ring-[#0096FF]"
+                  className="w-full p-3 rounded-md border shadow-md"
                 />
-              </div>
+              </>
             ) : (
-              <div className="space-y-4">
+              <>
                 <input
-                  type="text"
-                  name="resume"
-                  value={formData.resume}
-                  onChange={handleChange}
-                  placeholder="Resume Link"
-                  className="w-full p-3 rounded-md border shadow-md focus:outline-none focus:ring-2 focus:ring-[#0096FF]"
+                  type="file"
+                  accept="application/pdf"
+                  onChange={(e) =>
+                    setFormData({ ...formData, resume: e.target.files[0] })
+                  }
+                  className="w-full p-3 rounded-md border shadow-md"
                 />
+                {formData.resume && !(typeof formData.resume === "string") && (
+                  <p className="text-sm text-gray-500">
+                    Selected file: {formData.resume.name}
+                  </p>
+                )}
                 <input
                   type="text"
                   name="skills"
                   value={formData.skills}
                   onChange={handleChange}
                   placeholder="Skills (comma-separated)"
-                  className="w-full p-3 rounded-md border shadow-md focus:outline-none focus:ring-2 focus:ring-[#0096FF]"
+                  className="w-full p-3 rounded-md border shadow-md"
                 />
-              </div>
+              </>
             )}
 
             <div className="flex gap-6 mt-6 justify-center">
