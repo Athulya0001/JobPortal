@@ -30,8 +30,13 @@ const authSlice = createSlice({
       state.recruiterProfile = null;
       state.candidateProfile = null;
     },
+    updateCandidateSavedJobs: (state, action) => {
+      if (state.candidateProfile) {
+        state.candidateProfile.savedJobs = action.payload;
+      }
+    },
   },
 });
 
-export const { setUser, logout } = authSlice.actions;
+export const { setUser, logout, updateCandidateSavedJobs } = authSlice.actions;
 export default authSlice.reducer;

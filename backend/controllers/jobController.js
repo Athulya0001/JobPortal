@@ -55,14 +55,20 @@ export const addJob = async (req, res) => {
 };
 
 // job details
-export const getAllJobs = async (req,res) => {
+export const getAllJobs = async (req, res) => {
   try {
     const allJobs = await Job.find()
-    return res.status(200).json({success:true, jobs: allJobs})
+      .populate({
+        path: "createdBy",
+        select: "companyDetails name email"
+      });
+
+    return res.status(200).json({ success: true, jobs: allJobs });
   } catch (error) {
-    return res.status(500).json({success: false, message: "Error getting jobs, server error"})
+    console.error("Error getting jobs:", error);
+    return res.status(500).json({ success: false, message: "Error getting jobs, server error" });
   }
-}
+};
 
 // get job by jobid
 export const getJobById = async (req, res) => {
@@ -74,9 +80,9 @@ export const getJobById = async (req, res) => {
       return res.status(404).json({ success: false, message: "Job not found" });
     }
 
-    res.status(200).json({ success: true, job });
+    return res.status(200).json({ success: true, job });
   } catch (error) {
     console.error("Error fetching job by ID:", error);
-    res.status(500).json({ success: false, message: "Server error" });
+    return res.status(500).json({ success: false, message: "Server error" });
   }
 };

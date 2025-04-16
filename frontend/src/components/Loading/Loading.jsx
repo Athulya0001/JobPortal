@@ -10,7 +10,7 @@ const Loading = ({ type = "bubbles", color = "#0096FF", size = 24 }) => {
 
   if (type === "bubbles") {
     return (
-      <div className="flex items-center justify-center gap-2 h-20">
+      <div className="flex mt-[300px] items-center justify-center gap-2 h-20">
         {[0, 0.2, 0.4].map((delay, i) => (
           <motion.div
             key={i}

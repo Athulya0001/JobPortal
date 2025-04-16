@@ -5,6 +5,7 @@ import mongoConnect from './mongoConnect.js'
 import requireAuth from './middleware/requireAuth.js'
 import userRouter from './routes/userRoutes.js'
 import jobRouter from './routes/jobRoutes.js'
+import candidateRouter from './routes/candidateRoutes.js'
 
 const app = express()
 
@@ -27,6 +28,7 @@ app.get("/api/protected", requireAuth, (req, res) => {
 
 app.use('/api/user', userRouter);
 app.use("/api/job", jobRouter);
+app.use("/api/candidate", candidateRouter)
 
 mongoConnect().then(()=>{
     try {

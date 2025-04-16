@@ -5,11 +5,12 @@ import { ThemeContext } from '../../Context/ThemeContext';
 import { motion } from 'framer-motion';
 import { FaMapMarkerAlt, FaDollarSign, FaUserTie } from 'react-icons/fa';
 
-const JobCard = ({ jobId }) => {
-  const jobs = useSelector((state) => state.jobs.jobs);
+const JobCard = ({ job }) => {
   const recruiter = useSelector((state) => state.auth.recruiterProfile);
-  const job = jobs.find((job) => job._id === jobId);
   const { darkMode } = useContext(ThemeContext);
+  const user = useSelector((state) => state.auth.user);
+  const candidate = useSelector((state) => state.auth.candidateProfile);
+  const savedJobs = candidate?.savedJobs || [];
 
   if (!job) return null;
 
@@ -25,13 +26,13 @@ const JobCard = ({ jobId }) => {
       viewport={{ once: true }}
     >
       <div
-        className={`w-full max-w-xl mx-auto rounded-2xl border transition-all duration-300 transform hover:scale-[1.02] shadow-lg overflow-hidden 
+        className={`w-full max-w-xl mx-auto my-4 rounded-2xl border transition-all duration-300 transform hover:scale-[1.02] shadow-lg overflow-hidden 
         ${darkMode ? "bg-[#1f2937] border-gray-700 text-gray-200" : "bg-white border-gray-200 text-gray-900"}`}
       >
         <div className="p-6 space-y-4">
           <div>
             <h5 className="text-sm font-medium text-indigo-500 uppercase tracking-wide">
-              {recruiter?.companyDetails.name}
+              {job?.createdBy.companyDetails.name}
             </h5>
             <h3 className="text-2xl font-bold mt-1 leading-snug hover:text-indigo-600 transition-colors duration-300">
               {job.title}
@@ -56,7 +57,7 @@ const JobCard = ({ jobId }) => {
             </div>
             <div className="flex items-center gap-2">
               <FaMapMarkerAlt className="text-indigo-500" />
-              <span>{recruiter?.companyDetails.location || 'Location N/A'}</span>
+              <span>{job?.createdBy.companyDetails.location || 'Location N/A'}</span>
             </div>
           </div>
 
