@@ -3,11 +3,19 @@ import { useSelector, useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { ThemeContext } from '../../Context/ThemeContext';
 import JobCard from '../JobCard/JobCard';
+import Loading from '../Loading/Loading'
 
 const RecruiterViewJobs = () => {
   const jobs = useSelector((state) => state.jobs.jobs || []);
+  console.log(jobs)
   const { darkMode } = useContext(ThemeContext);
 
+  if (!jobs) {
+    return <div>
+      <Loading/>
+    </div>
+  }
+  
   return (
     <div className={`flex h-screen ${darkMode ? "bg-gray-900 text-white" : "bg-gray-50 text-gray-900"}`}>
       <div className={`flex-1 overflow-y-auto p-6 ${darkMode ? "bg-gray-900 text-white" : "bg-gray-100 text-gray-900"}`}>
@@ -24,6 +32,7 @@ const RecruiterViewJobs = () => {
       </div>
     </div>
   );
+  
 };
 
 export default RecruiterViewJobs;

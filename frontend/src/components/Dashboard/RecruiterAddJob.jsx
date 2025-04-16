@@ -53,7 +53,7 @@ const RecruiterAddJob = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
-  
+
     try {
       const formDataToSend = new FormData();
       formDataToSend.append("title", formData.title);
@@ -62,17 +62,22 @@ const RecruiterAddJob = () => {
       formDataToSend.append("numberOfVacancies", formData.numberOfVacancies);
       formDataToSend.append("salary", formData.salary);
       formDataToSend.append("createdBy", recruiter._id);
-  
+
       if (formData.thumbnail) {
         formDataToSend.append("thumbnail", formData.thumbnail);
       }
-  
+
+      for (let [key, value] of formDataToSend.entries()) {
+        console.log(`${key}:`, value);
+      }
+
       const res = await axios.post("http://localhost:4000/api/job/add", formDataToSend, {
         headers: {
           "Content-Type": "multipart/form-data",
         },
       });
-  
+
+
       if (res.data.success) {
         dispatch(addJob(res.data.job));
         toast.success("Job posted successfully!");
@@ -87,7 +92,7 @@ const RecruiterAddJob = () => {
       setLoading(false);
     }
   };
-  
+
 
   return (
     <div className={`min-h-screen px-4 flex justify-center items-start ${darkMode ? "bg-gray-900 text-white" : "bg-gray-100 text-black"}`}>

@@ -8,13 +8,14 @@ const dynamicStorage = new CloudinaryStorage({
     const isPDF = file.mimetype === "application/pdf";
 
     return {
-      folder: isPDF ? "resumes" : "profile_images",
-      resource_type: isPDF ? "raw" : undefined,
-      format: isPDF ? "pdf" : ["jpg", "jpeg", "png", "webp", "svg"],
+      folder: isPDF ? "resume" : "profile_images",
+      resource_type: isPDF ? "raw" : "image",
+      format: isPDF ? "pdf" : undefined,
 
       public_id: `${file.originalname
         .split(".")[0]
-        .replace(/\s+/g, "-")}-${Date.now()}`,
+        .replace(/\s+/g, "-")
+        .toLowerCase()}-${Date.now()}`,
     };
   },
 });

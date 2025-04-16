@@ -8,7 +8,7 @@ const userRouter = express.Router();
 
 userRouter.post("/register", requireAuth, register)
 userRouter.get("/:clerkId",requireAuth, getUserData)
-userRouter.post("/complete-profile", uploadFile.single("resumes"),requireAuth, completeProfile);
+userRouter.post("/complete-profile", uploadFile.single("resume"),requireAuth, completeProfile);
 
 
 export default userRouter

@@ -9,7 +9,7 @@ export const JobProvider = ({ children }) => {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
     const dispatch = useDispatch();
-    const recruiterId = useSelector((state) => state.auth.recruiterProfile?._id);
+    const recruiterId = useSelector((state) => state.auth.recruiterProfile?._id)
 
     const fetchAllJobs = async () => {
         setLoading(true);
@@ -17,6 +17,8 @@ export const JobProvider = ({ children }) => {
           const res = await axios.get(`http://localhost:4000/api/job`);
           if (res.data.success) {
             dispatch(setAllJobs(res.data.jobs));
+            const recruiterJob = res.data.jobs.filter((job)=>recruiterId===job.createdBy)
+            dispatch(setJobs(recruiterJob))
           }
         } catch (err) {
           setError('Error fetching all jobs');

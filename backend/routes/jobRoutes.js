@@ -1,6 +1,6 @@
 import express from "express";
-import { addJob, getAllJobs, getJobById } from "../controllers/jobController.js";
 import { uploadFile} from "../middleware/multerPdfConfig.js";
+import { addJob, getAllJobs, getJobById } from "../controllers/jobController.js";
 
 const jobRouter = express.Router();
 

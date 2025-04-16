@@ -5,7 +5,7 @@ import Recruiter from "../models/recruiterModel.js";
 export const addJob = async (req, res) => {
   try {
     const { title, description, skillsRequired, numberOfVacancies, salary, createdBy } = req.body;
-    const thumbnail = req.file?.path; 
+    const thumbnail = req.file?.path || req.file
 
     if (
       !title ||
@@ -48,29 +48,12 @@ export const addJob = async (req, res) => {
     });
 
   } catch (error) {
-    console.error("Error adding job:", error);
+    console.error("Error adding job:", error.message);
+    console.error("Error details:", JSON.stringify(error, null, 2));
     return res.status(500).json({ success: false, message: "Server error" });
   }
 };
 
-// get all jobs wrt user
-export const getJobs = async (req, res) => {
-    try {
-      const { recruiterId } = req.params;
-  
-      const jobs = await Job.find({ createdBy: recruiterId }).populate("createdBy", "name email").exec();
-  
-      if (!jobs.length) {
-        return res.status(404).json({ success: false, message: "No jobs found for this recruiter" });
-      }
-  
-      return res.status(200).json({ success: true, jobs });
-    } catch (error) {
-      console.error("Error fetching jobs:", error);
-      return res.status(500).json({ success: false, message: "Server error" });
-    }
-  };
-  
 // job details
 export const getAllJobs = async (req,res) => {
   try {

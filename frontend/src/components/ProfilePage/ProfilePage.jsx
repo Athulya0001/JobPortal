@@ -6,11 +6,12 @@ import {
   FaMapMarkerAlt,
   FaFileAlt,
   FaUserEdit,
+  FaTimes,
 } from "react-icons/fa";
 import { ThemeContext } from "../../Context/ThemeContext";
 import { toast } from "react-toastify";
 import { setUser } from "../../Redux/Reducers/authSlice";
-import PdfViewer from "../PdfViewer/PdfViewer";
+import Loading from "../Loading/Loading";
 
 const ProfilePage = () => {
   const { darkMode } = useContext(ThemeContext);
@@ -33,10 +34,27 @@ const ProfilePage = () => {
         position: profile?.position || "",
       }
       : {
-        resume: null,
-        skills: profile?.skills?.join(", ") || "",
+        resume: profile?.resume || null,
+        skills: profile?.skills || [],
       }
+
   );
+
+  const [skillInput, setSkillInput] = useState("");
+
+  const handleAddSkill = () => {
+    if (skillInput && !formData.skills.includes(skillInput.trim())) {
+      setFormData({ ...formData, skills: [...formData.skills, skillInput.trim()] });
+      setSkillInput("");
+    }
+  };
+
+  const handleRemoveSkill = (skillToRemove) => {
+    setFormData({
+      ...formData,
+      skills: formData.skills.filter((skill) => skill !== skillToRemove),
+    });
+  };
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -58,7 +76,7 @@ const ProfilePage = () => {
         formPayload.append("description", formData.description);
         formPayload.append("position", formData.position);
       } else {
-        formPayload.append("skills", formData.skills);
+        formPayload.append("skills", JSON.stringify(formData.skills));
         if (formData.resume instanceof File) {
           formPayload.append("resume", formData.resume);
         }
@@ -93,7 +111,8 @@ const ProfilePage = () => {
     }
   };
 
-  if (!user || !profile) return <p className="text-center mt-24">Loading profile...</p>;
+  if (!user || !profile)
+    return <div><Loading/></div>
 
   return (
     <div
@@ -134,7 +153,8 @@ const ProfilePage = () => {
                   <FaBuilding /> {profile?.companyDetails?.name || "N/A"}
                 </p>
                 <p className="flex items-center gap-2 text-lg">
-                  <FaMapMarkerAlt /> {profile?.companyDetails?.location || "N/A"}
+                  <FaMapMarkerAlt />{" "}
+                  {profile?.companyDetails?.location || "N/A"}
                 </p>
                 <p className="text-lg font-semibold">
                   <strong>Position:</strong> {profile?.position || "N/A"}
@@ -144,7 +164,9 @@ const ProfilePage = () => {
                     About Company
                   </h2>
                   <p>
-                    <span className="font-medium text-[#0096FF]">Description:</span>{" "}
+                    <span className="font-medium text-[#0096FF]">
+                      Description:
+                    </span>{" "}
                     {profile?.companyDetails?.description || (
                       <span className="italic text-gray-400">N/A</span>
                     )}
@@ -171,15 +193,23 @@ const ProfilePage = () => {
                 <p className="flex items-center gap-2 text-lg">
                   <FaFileAlt /> <strong>Resume:</strong>
                 </p>
-                <div className="flex justify-center">
-                  <iframe
-                    src="https://res.cloudinary.com/dobsucixf/raw/upload/v1744716935/resumes/rgvhbgtl4dcycvcl5tsg"
-                    title="Resume Preview"
-                    width="100%"
-                    height="500px"
-                    className="rounded-md shadow-lg border"
-                  ></iframe>
-                </div>
+                {profile?.resume ? (
+                  <div className="flex justify-center">
+                    <iframe
+                      src={profile.resume}
+                      title="Resume Preview"
+                      width="100%"
+                      height="500px"
+                      className="rounded-md shadow-lg border"
+                    />
+                  </div>
+                ) : (
+                  <p className="italic text-gray-400">No resume uploaded.</p>
+                )}
+                <p className="text-lg font-semibold">
+                  <strong>Skills:</strong>{" "}
+                  {profile?.skills?.join(", ") || "N/A"}
+                </p>
               </div>
             )}
           </div>
@@ -237,19 +267,61 @@ const ProfilePage = () => {
                   }
                   className="w-full p-3 rounded-md border shadow-md"
                 />
-                {formData.resume && !(typeof formData.resume === "string") && (
+                {formData.resume && typeof formData.resume === "object" && (
                   <p className="text-sm text-gray-500">
                     Selected file: {formData.resume.name}
                   </p>
                 )}
-                <input
-                  type="text"
-                  name="skills"
-                  value={formData.skills}
-                  onChange={handleChange}
-                  placeholder="Skills (comma-separated)"
-                  className="w-full p-3 rounded-md border shadow-md"
-                />
+
+                {formData.resume && typeof formData.resume === "string" && (
+                  <div className="mt-4">
+                    <p className="text-sm font-medium mb-1">Current Resume Preview:</p>
+                    <iframe
+                      src={formData.resume}
+                      title="Resume Preview"
+                      width="100%"
+                      height="400px"
+                      className="rounded-md shadow-md border"
+                    />
+                  </div>
+                )}
+
+                <div className="mt-6">
+                  <label className="block text-sm font-medium mb-1">Skills</label>
+                  <div className="flex items-center gap-2">
+                    <input
+                      type="text"
+                      value={skillInput}
+                      onChange={(e) => setSkillInput(e.target.value)}
+                      placeholder="Add a skill"
+                      className="flex-1 p-2 border rounded-md shadow-sm"
+                    />
+                    <button
+                      type="button"
+                      onClick={handleAddSkill}
+                      className="bg-[#0096FF] hover:bg-[#007acc] text-white px-4 py-2 rounded-md"
+                    >
+                      Add
+                    </button>
+                  </div>
+                  <ul className="flex flex-wrap gap-2 mt-3">
+                    {formData.skills.map((skill, idx) => (
+                      <li
+                        key={idx}
+                        className="flex items-center gap-2 bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm"
+                      >
+                        {skill}
+                        <button
+                          type="button"
+                          onClick={() => handleRemoveSkill(skill)}
+                          className="text-blue-600 hover:text-red-500"
+                        >
+                          <FaTimes />
+                        </button>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
               </>
             )}
 
