@@ -31,7 +31,7 @@ const AuthPage = () => {
       {isSignUp ? <SignUp /> : <SignIn />}
       <button
         onClick={() => setIsSignUp(!isSignUp)}
-        className="mt-4 px-4 py-2 bg-blue-500 text-white rounded"
+        className="mt-4 px-4 py-2 bg-[#0096ff] hover:bg-[#007acc] text-white rounded cursor-pointer"
       >
         {isSignUp ? "Already have an account? Sign In" : "New user? Sign Up"}
       </button>

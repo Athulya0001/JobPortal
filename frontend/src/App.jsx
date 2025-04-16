@@ -55,7 +55,7 @@ function App() {
           <Route path="/" element={<Home />} />
 
           <Route path="/auth" element={!isSignedIn ? <AuthPage /> : <Navigate to="/dashboard" />} />
-          <Route path="/dummy" element={<Loading type="bars" />}/>
+          <Route path="/dummy" element={<AuthPage/>}/>
 
           <Route path="/set-role" element={isSignedIn && !role ? <RoleSelection /> : <Navigate to="/dashboard" />} />
 

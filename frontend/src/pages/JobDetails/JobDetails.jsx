@@ -83,8 +83,8 @@ const JobDetails = () => {
   if (!job) return <p className="text-center mt-[85px] text-red-500">Job not found.</p>;
 
   return (
-    <div className={`min-h-screen ${darkMode ? "bg-gray-900 text-white" : "bg-white text-gray-900"}`}>
-      <div className="mx-auto pt-[80px] px-6 py-5 max-w-7xl">
+    <div className={`min-h-screen pt-[80px] ${darkMode ? "bg-gray-900 text-white" : "bg-white text-gray-900"}`}>
+      <div className="mx-auto px-6 py-5 max-w-7xl">
         <div className="flex justify-between">
           <h1 className="text-3xl font-bold mb-4">{job.title}</h1>
           {user?.role==='candidate'&&(
