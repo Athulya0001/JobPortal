@@ -17,7 +17,10 @@ const authSlice = createSlice({
       state.user = { _id, clerkId, email, role, profileImage, name };
 
       if (role === "recruiter") {
-        state.recruiterProfile = profile;
+        state.recruiterProfile = {
+          ...profile,
+          jobsCreated: action.payload.jobsCreated || [],
+        };
       } else if (role === "candidate") {
         state.candidateProfile = profile;
       }

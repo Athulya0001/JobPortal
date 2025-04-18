@@ -116,7 +116,7 @@ const ProfilePage = () => {
 
   return (
     <div
-      className={`min-h-screen flex items-center justify-center px-4 ${darkMode ? "bg-gray-900 text-white" : "bg-gray-100 text-gray-900"
+      className={`min-h-screen flex items-center justify-center px-4 ${darkMode ? "bg-gray-900 text-white" : "bg-white text-gray-900"
         }`}
     >
       <div

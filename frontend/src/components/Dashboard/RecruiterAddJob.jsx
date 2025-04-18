@@ -67,10 +67,6 @@ const RecruiterAddJob = () => {
         formDataToSend.append("thumbnail", formData.thumbnail);
       }
 
-      for (let [key, value] of formDataToSend.entries()) {
-        console.log(`${key}:`, value);
-      }
-
       const res = await axios.post("http://localhost:4000/api/job/add", formDataToSend, {
         headers: {
           "Content-Type": "multipart/form-data",
@@ -95,8 +91,8 @@ const RecruiterAddJob = () => {
 
 
   return (
-    <div className={`min-h-screen px-4 flex justify-center items-start ${darkMode ? "bg-gray-900 text-white" : "bg-gray-100 text-black"}`}>
-      <form onSubmit={handleSubmit} className={`w-full max-w-xl p-8 rounded-xl shadow-xl ${darkMode ? "bg-gray-800" : "bg-white"}`}>
+    <div className={`min-h-screen px-4 flex justify-center items-start ${darkMode ? "bg-gray-900 text-white" : "bg-white text-black"}`}>
+      <form onSubmit={handleSubmit} className={`w-full max-w-xl p-8 rounded-xl shadow-xl ${darkMode ? "bg-gray-800" : "bg-gray-100"}`}>
         <h2 className="text-2xl font-semibold mb-6 text-center">Add New Job</h2>
 
         <input

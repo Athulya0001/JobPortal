@@ -36,7 +36,7 @@ const Dashboard = () => {
 
       <aside
         className={`
-          fixed md:static top-0 left-0 h-screen w-64 p-6 space-y-4 shadow-md transition-transform duration-300 ease-in-out
+          fixed md:static top-0 left-0 min-h-screen w-64 p-6 space-y-4 shadow-md transition-transform duration-300 ease-in-out
           ${darkMode ? 'bg-[#04375c] text-[#0096FF]' : 'bg-[#ddedfa] text-[#0096FF]'}
           ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'}
           md:translate-x-0 z-50
@@ -100,7 +100,7 @@ const Dashboard = () => {
       <main
         className={`flex-1 overflow-y-auto p-4 md:p-6 transition-all duration-300 ${
           isSidebarOpen ? 'overflow-hidden h-screen' : ''
-        } ${darkMode ? 'bg-gray-900 text-white' : 'bg-gray-100 text-gray-900'}`}
+        } ${darkMode ? 'bg-gray-900 text-white' : 'bg-white text-gray-900'}`}
       >
         <Outlet />
       </main>

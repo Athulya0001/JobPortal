@@ -1,30 +1,19 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { useUser } from '@clerk/clerk-react';
 import { ThemeContext } from '../../Context/ThemeContext';
-import axios from 'axios';
 import HeroSection from '../../components/HeroSection/HeroSection';
 import HeroBG from '../../assets/hero.jpg'
 import HeroBGDark from '../../assets/herobgdark.jpg'
 import FeatureSection from '../../components/FeatureSection/FeatureSection';
 import LatestJobs from '../../components/LatestJobs/LatestJobs';
+import MotivationBanner from '../../components/MotivationBanner/MotivationBanner';
+import RecommendedJobs from '../../components/RecommendedJobs/RecommendedJobs';
+import { useSelector } from 'react-redux';
+import RecruiterJobStatus from '../../components/RecruiterJobsStatus/RecruiterJobStatus';
 
 const Home = () => {
-  const { isSignedIn } = useUser();
   const { darkMode } = useContext(ThemeContext);
-  const [jobs, setJobs] = useState([])
-
-  // useEffect(() => {
-  //   const fetchJobData = async () => {
-  //     try {
-  //       const response = await axios.get("http://localhost:4000/api/job")
-  //       console.log(response.data)
-  //       setJobs(response.data.jobs);
-  //     } catch (error) {
-  //       console.log("Error Fetching Jobs")
-  //     }
-  //   }
-  //   fetchJobData()
-  // }, [])
+  const user = useSelector((state) => state.auth.user)
+  const isRecruiter = user?.role === "recruiter";
 
   return (
     <div
@@ -32,7 +21,7 @@ const Home = () => {
         }`}
     >
       <div className='w-screen' style={{
-        backgroundImage: `${darkMode ? `url(${HeroBGDark})`: `url(${HeroBG})`}`,
+        backgroundImage: `${darkMode ? `url(${HeroBGDark})` : `url(${HeroBG})`}`,
         backgroundSize: "cover",
         backgroundPosition: "center",
         backgroundRepeat: "no-repeat",
@@ -43,10 +32,19 @@ const Home = () => {
         <HeroSection />
       </div>
       <div>
-        <FeatureSection/>
+        <FeatureSection />
       </div>
       <div>
-        <LatestJobs/>
+        <LatestJobs />
+      </div>
+      <div>
+        <MotivationBanner />
+      </div>
+      <div>
+        {!isRecruiter && <RecommendedJobs />}
+      </div>
+      <div>
+      {isRecruiter && <RecruiterJobStatus />}
       </div>
     </div>
   );

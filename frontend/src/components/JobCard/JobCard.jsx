@@ -31,10 +31,10 @@ const JobCard = ({ job }) => {
       >
         <div className="p-6 space-y-4">
           <div>
-            <h5 className="text-sm font-medium text-indigo-500 uppercase tracking-wide">
+            <h5 className="text-sm font-medium text-[#0096ff] uppercase tracking-wide">
               {job?.createdBy.companyDetails.name}
             </h5>
-            <h3 className="text-2xl font-bold mt-1 leading-snug hover:text-indigo-600 transition-colors duration-300">
+            <h3 className="text-2xl font-bold mt-1 leading-snug hover:text-[#007acc] transition-colors duration-300">
               {job.title}
             </h3>
           </div>
@@ -48,15 +48,15 @@ const JobCard = ({ job }) => {
 
           <div className="flex flex-wrap gap-6 text-sm font-medium text-gray-600 dark:text-gray-400">
             <div className="flex items-center gap-2">
-              <FaDollarSign className="text-indigo-500" />
+              <FaDollarSign className="text-[#0096ff]" />
               <span>{job.salary}</span>
             </div>
             <div className="flex items-center gap-2">
-              <FaUserTie className="text-indigo-500" />
+              <FaUserTie className="text-[#0096ff]" />
               <span>{job.numberOfVacancies} Vacancy</span>
             </div>
             <div className="flex items-center gap-2">
-              <FaMapMarkerAlt className="text-indigo-500" />
+              <FaMapMarkerAlt className="text-[#0096ff]" />
               <span>{job?.createdBy.companyDetails.location || 'Location N/A'}</span>
             </div>
           </div>
@@ -64,7 +64,7 @@ const JobCard = ({ job }) => {
           <div className="text-center pt-4">
             <Link
               to={`/job/${job._id}`}
-              className="inline-block px-5 py-2 rounded-full bg-indigo-600 text-white hover:bg-indigo-700 transition-colors duration-300 font-semibold shadow-sm"
+              className="inline-block px-5 py-2 rounded-full bg-[#0096ff] text-white hover:bg-[#007acc] transition-colors duration-300 font-semibold shadow-sm"
             >
               View Full Details
             </Link>

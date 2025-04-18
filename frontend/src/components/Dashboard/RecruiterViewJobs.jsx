@@ -1,15 +1,11 @@
-import React, { useContext, useEffect } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
+import React, { useContext} from 'react';
+import { useSelector} from 'react-redux';
 import { ThemeContext } from '../../Context/ThemeContext';
 import JobCard from '../JobCard/JobCard';
 import Loading from '../Loading/Loading'
 
 const RecruiterViewJobs = () => {
-  const allJobs = useSelector((state) => state.jobs.allJobs || []);
-  const recruiterId = useSelector((state) => state.auth.recruiterProfile?._id);
-
-  const jobs = allJobs.filter((job) => recruiterId === job.createdBy._id);
+  const jobs = useSelector((state)=>state.auth.recruiterProfile.jobsCreated)
 
   const { darkMode } = useContext(ThemeContext);
 
@@ -20,8 +16,8 @@ const RecruiterViewJobs = () => {
   }
 
   return (
-    <div className={`flex h-screen ${darkMode ? "bg-gray-900 text-white" : "bg-gray-50 text-gray-900"}`}>
-      <div className={`flex-1 overflow-y-auto p-6 ${darkMode ? "bg-gray-900 text-white" : "bg-gray-100 text-gray-900"}`}>
+    <div className={`flex h-screen ${darkMode ? "bg-gray-900 text-white" : "bg-white text-gray-900"}`}>
+      <div className={`flex-1 p-6 overflow-y-auto`}>
         <h2 className="text-3xl font-semibold mb-6">Your Posted Jobs</h2>
 
         {jobs.length > 0 ? (

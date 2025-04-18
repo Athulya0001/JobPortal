@@ -7,7 +7,7 @@ const HeroSection = () => {
     const { darkMode } = useContext(ThemeContext);
     return (
         <div
-            className={`mt-20 md:mt-28 lg:mt-32 xl:mt-40 pt-6 md:pt-10 h-auto md:h-[60vh] flex flex-col md:flex-row md:mx-10 items-center justify-start md:justify-between gap-8 px-4 transition duration-300 ${darkMode ? "text-white" : "text-black"
+            className={`mt-20 md:mt-28 lg:mt-32 xl:mt-40 pt-6 h-auto md:h-[60vh] flex flex-col md:flex-row md:mx-10 items-center justify-start md:justify-between gap-8 px-4 transition duration-300 ${darkMode ? "text-white" : "text-black"
                 }`}
         >
             <SearchBar onSearch={() => { }} />

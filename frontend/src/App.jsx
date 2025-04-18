@@ -21,6 +21,7 @@ import InitUser from './utils/InitUser';
 import SigninWarn from "./components/SigninWarn/SIgninWarn";
 import DashboardHome from "./components/Dashboard/DashBoardHome";
 import Loading from "./components/Loading/Loading";
+import MotivationBanner from "./components/MotivationBanner/MotivationBanner";
 
 function App() {
   const { isSignedIn, user } = useUser();
@@ -46,7 +47,7 @@ function App() {
   }, [isSignedIn, user, dispatch]);
 
   return (
-    <div className={`${darkMode ? "bg-gray-900" : "bg-gray-100"} min-h-screen`}>
+    <div className={`${darkMode ? "bg-gray-900" : "bg-white"} min-h-screen`}>
       <InitUser>
 
         <ToastContainer />
@@ -55,7 +56,7 @@ function App() {
           <Route path="/" element={<Home />} />
 
           <Route path="/auth" element={!isSignedIn ? <AuthPage /> : <Navigate to="/dashboard" />} />
-          <Route path="/dummy" element={<AuthPage/>}/>
+          <Route path="/dummy" element={<MotivationBanner/>}/>
 
           <Route path="/set-role" element={isSignedIn && !role ? <RoleSelection /> : <Navigate to="/dashboard" />} />
 

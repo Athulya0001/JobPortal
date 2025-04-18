@@ -51,8 +51,29 @@ export const getUserData = async (req, res) => {
 
     if (user.role === "recruiter") {
       profile = await Recruiter.findOne({ clerkId: clerkId });
-      jobsCreated = await Job.findOne({createdBy:profile._id})
-
+      if (profile) {
+        jobsCreated = await Job.find({ createdBy: profile._id })
+          .populate({
+            path: 'createdBy',
+            model: 'Recruiter',
+            select: 'companyDetails',
+          })
+          .populate({
+            path: "shortlisted",
+            model: "Candidate",
+            select: "name email resume",
+          })
+          .populate({
+            path: "selected",
+            model: "Candidate",
+            select: "name email resume",
+          })
+          .populate({
+            path: "applicants",
+            model: "Candidate",
+            select: "name email resume",
+          });
+      }
       return res.status(200).json({
         user,
         profile,

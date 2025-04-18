@@ -25,6 +25,7 @@ const InitUser = ({ children }) => {
       const mongoUser = res.data.user;
       const profile = res.data.profile;
       const profileComplete = res.data.profileComplete;
+      const jobsCreated = res.data.jobsCreated || [];
 
       dispatch(
         setUser({
@@ -36,6 +37,7 @@ const InitUser = ({ children }) => {
           role: mongoUser.role,
           profileComplete,
           profile,
+          jobsCreated,
         })
       );
     } catch (error) {

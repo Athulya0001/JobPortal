@@ -1,6 +1,6 @@
 import React from "react";
 import { motion } from "framer-motion";
-import { FaCircle, FaBars, FaDotCircle } from "react-icons/fa";
+import { FaCircle, FaDotCircle } from "react-icons/fa";
 
 const Loading = ({ type = "bubbles", color = "#0096FF", size = 24 }) => {
   const commonProps = {
