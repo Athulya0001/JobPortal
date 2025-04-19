@@ -1,10 +1,10 @@
 import React, { useState, useContext, useRef, useEffect } from "react";
 import { ThemeContext } from "../../Context/ThemeContext";
 import { FaMoon, FaSun } from "react-icons/fa";
-import { useUser, useClerk } from "@clerk/clerk-react";
-import { SignedIn, SignedOut } from "@clerk/clerk-react";
+import { useUser, useClerk, SignedIn, SignedOut } from "@clerk/clerk-react";
 import { Link, useNavigate } from "react-router-dom";
-import { FaUser, FaSignOutAlt, FaTachometerAlt } from 'react-icons/fa';
+import { useSelector } from "react-redux";
+import { FaSignOutAlt, FaTachometerAlt } from "react-icons/fa";
 import Logo from "../Logo/Logo";
 
 const Navbar = () => {
@@ -13,12 +13,14 @@ const Navbar = () => {
   const [lastScrollY, setLastScrollY] = useState(0);
 
   const { darkMode, setDarkMode } = useContext(ThemeContext);
-  const { isSignedIn, user } = useUser();
+  const { user: clerkUser, isSignedIn } = useUser();
   const { signOut } = useClerk();
+  const { user } = useSelector((state) => state.auth);
   const navigate = useNavigate();
   const dropdownRef = useRef(null);
+  const { openSignIn } = useClerk();
 
-  const handleAvatarClick = () => setIsDropdownOpen(prev => !prev);
+  const handleAvatarClick = () => setIsDropdownOpen((prev) => !prev);
 
   const handleSignOut = async () => {
     await signOut();
@@ -55,7 +57,13 @@ const Navbar = () => {
 
   return (
     <nav
-      className={`fixed z-50 top-0 left-0 w-full p-4 shadow-md transition-all duration-500 ease-in-out transform ${showNavbar ? 'translate-y-0 opacity-100' : '-translate-y-full opacity-0'} ${darkMode ? "bg-black/30 text-white" : "bg-white/30 text-black"}`}
+      className={`fixed z-50 top-0 left-0 w-full p-4 shadow-md transition-all duration-500 ease-in-out transform ${
+        showNavbar ? "translate-y-0 opacity-100" : "-translate-y-full opacity-0"
+      } ${
+        darkMode
+          ? "bg-black/30 text-white"
+          : "bg-white/30 text-black backdrop-blur-lg"
+      }`}
     >
       <div className="container mx-auto flex justify-between items-center">
         <Link to="/">
@@ -65,21 +73,40 @@ const Navbar = () => {
         <div className="flex items-center space-x-4 relative">
           <button
             onClick={() => setDarkMode(!darkMode)}
-            className={`text-xl text-[#0096FF] hover:text-blue-400 transition`}
+            className="text-xl text-[#0096FF] hover:text-blue-400 transition"
           >
             {darkMode ? <FaSun /> : <FaMoon />}
           </button>
 
           <SignedIn>
-            <div ref={dropdownRef} className="relative">
+            <div ref={dropdownRef} className="relative flex items-center gap-2">
+              {user?.role && (
+                <span
+                  className={`text-sm px-3 py-1 rounded-full font-semibold ${
+                    user.role === "recruiter"
+                      ? "bg-green-500 text-white"
+                      : "bg-purple-500 text-white"
+                  }`}
+                >
+                  {user.role.charAt(0).toUpperCase() + user.role.slice(1)}
+                </span>
+              )}
+
               <img
-                src={user?.imageUrl}
+                src={clerkUser?.imageUrl}
                 alt="avatar"
                 onClick={handleAvatarClick}
-                className="w-10 h-10 rounded-full cursor-pointer border-2 border-blue-600"
+                className="w-10 h-10 rounded-full cursor-pointer border-2 border-blue-600 object-cover"
               />
+
               {isDropdownOpen && (
-                <div className={`absolute right-0 mt-2 w-56 rounded-xl shadow-xl z-50 transition-all duration-300 ${darkMode ? "bg-gray-800 text-white border border-gray-700" : "bg-white text-black border border-gray-300"}`}>
+                <div
+                  className={`absolute top-full right-0 mt-2 w-56 rounded-xl shadow-xl z-50 transition-all duration-300 ${
+                    darkMode
+                      ? "bg-gray-800 text-white border border-gray-700"
+                      : "bg-white text-black border border-gray-300"
+                  }`}
+                >
                   <button
                     onClick={() => {
                       navigate("/dashboard");
@@ -103,12 +130,12 @@ const Navbar = () => {
           </SignedIn>
 
           <SignedOut>
-            <a
-              href="/auth"
+            <button
+              onClick={() => openSignIn()}
               className="text-xl underline cursor-pointer text-[#0096FF] hover:text-[#89CFF0] transition"
             >
               Sign In
-            </a>
+            </button>
           </SignedOut>
         </div>
       </div>

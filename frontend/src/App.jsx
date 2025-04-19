@@ -7,7 +7,6 @@ import { toast, ToastContainer } from "react-toastify";
 import Navbar from "./components/Navbar/Navbar";
 import Dashboard from "./components/Dashboard/Dashboard";
 import Home from "./pages/Home/Home";
-import AuthPage from "./pages/AuthPage/AuthPage";
 import RoleSelection from "./components/RoleSelection/RoleSelection";
 import SetProfile from "./components/SetProfile/SetProfile";
 import ProfilePage from "./components/ProfilePage/ProfilePage";
@@ -55,7 +54,7 @@ function App() {
         <Routes>
           <Route path="/" element={<Home />} />
 
-          <Route path="/auth" element={!isSignedIn ? <AuthPage /> : <Navigate to="/dashboard" />} />
+          <Route path="/auth" element={<Navigate to="/" />} />
           <Route path="/dummy" element={<MotivationBanner/>}/>
 
           <Route path="/set-role" element={isSignedIn && !role ? <RoleSelection /> : <Navigate to="/dashboard" />} />
@@ -101,7 +100,6 @@ function App() {
               </>
             )}
           </Route>
-          {/* <Route path="*" element={<Navigate to="/" />} /> */}
         </Routes>
       </InitUser>
 
