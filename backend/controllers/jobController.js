@@ -1,5 +1,6 @@
 import Job from "../models/jobModel.js";
 import Recruiter from "../models/recruiterModel.js";
+import Candidate from '../models/candidateModel.js'
 
 // add jobs
 export const addJob = async (req, res) => {
@@ -86,3 +87,8 @@ export const getJobById = async (req, res) => {
     return res.status(500).json({ success: false, message: "Server error" });
   }
 };
+
+// select candidates
+export const selectCandidates = async (req,res) => {
+  console.log("func")
+}

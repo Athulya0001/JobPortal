@@ -1,4 +1,4 @@
-import { Bar } from "react-chartjs-2"; // <-- use Bar for bar charts
+import { Bar } from "react-chartjs-2";
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -11,6 +11,7 @@ import {
 import { ThemeContext } from "../../Context/ThemeContext";
 import { useContext } from "react";
 import { useSelector } from "react-redux";
+import {Link} from 'react-router-dom'
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
 
@@ -53,10 +54,10 @@ const RecruiterJobStatus = () => {
                       job.selected?.length || 0,
                     ],
                     backgroundColor: [
-                      "#6366F1", // Vacancies
-                      "#0096FF", // Applicants
-                      "#34D399", // Shortlisted
-                      "#F59E0B", // Selected
+                      "#6366F1",
+                      "#0096FF",
+                      "#34D399",
+                      "#F59E0B",
                     ],
                     borderRadius: 8,
                   },
@@ -86,16 +87,12 @@ const RecruiterJobStatus = () => {
 
               return (
                 <div key={job._id} className="bg-gray-100 dark:bg-gray-800 p-4 rounded-lg shadow">
+                  <Link to={`/job/${job._id}`}>
                   <h3 className="text-xl font-semibold mb-2">{job.title}</h3>
+                  </Link>
                   <div className="relative h-60">
                     <Bar data={chartData} options={chartOptions} />
                   </div>
-                  <p className="mt-3 text-sm">
-                    <span className="font-medium text-gray-600 dark:text-gray-300">
-                      Status:
-                    </span>{" "}
-                    {job.status || "Not specified"}
-                  </p>
                 </div>
               );
             })}

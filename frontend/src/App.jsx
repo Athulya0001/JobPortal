@@ -21,6 +21,8 @@ import SigninWarn from "./components/SigninWarn/SIgninWarn";
 import DashboardHome from "./components/Dashboard/DashBoardHome";
 import Loading from "./components/Loading/Loading";
 import MotivationBanner from "./components/MotivationBanner/MotivationBanner";
+import RecruiterViewApplicants from "./components/Dashboard/RecruiterViewApplicants";
+import CandidateViewJobStatus from "./components/Dashboard/CandidateViewJobStatus";
 
 function App() {
   const { isSignedIn, user } = useUser();
@@ -91,12 +93,14 @@ function App() {
               <>
                 <Route path="add-job" element={<RecruiterAddJob />} />
                 <Route path="view-jobs" element={<RecruiterViewJobs />} />
+                <Route path="view-applicants" element={<RecruiterViewApplicants />} />
               </>
             )}
             {role === "candidate" && (
               <>
                 <Route path="applied-jobs" element={<CandidateAppliedJobs />} />
                 <Route path="saved-jobs" element={<CandidateSavedJobs />} />
+                <Route path="job-status" element={<CandidateViewJobStatus />} />
               </>
             )}
           </Route>

@@ -41,7 +41,6 @@ export const getUserData = async (req, res) => {
     const { clerkId } = req.params;
 
     const user = await User.findOne({ clerkId });
-
     if (!user) {
       return res.status(404).json({ error: "User not found" });
     }
@@ -50,30 +49,52 @@ export const getUserData = async (req, res) => {
     let jobsCreated = [];
 
     if (user.role === "recruiter") {
-      profile = await Recruiter.findOne({ clerkId: clerkId });
+      profile = await Recruiter.findOne({ clerkId }).populate("user", "name email");
+
       if (profile) {
         jobsCreated = await Job.find({ createdBy: profile._id })
           .populate({
-            path: 'createdBy',
-            model: 'Recruiter',
-            select: 'companyDetails',
+            path: "createdBy",
+            model: "Recruiter",
+            select: "companyDetails user",
+            populate: {
+              path: "user",
+              model: "User",
+              select: "name email",
+            },
           })
           .populate({
             path: "shortlisted",
             model: "Candidate",
-            select: "name email resume",
+            select: "name email resume user",
+            populate: {
+              path: "user",
+              model: "User",
+              select: "name email",
+            },
           })
           .populate({
             path: "selected",
             model: "Candidate",
-            select: "name email resume",
+            select: "name email resume user",
+            populate: {
+              path: "user",
+              model: "User",
+              select: "name email",
+            },
           })
           .populate({
             path: "applicants",
             model: "Candidate",
-            select: "name email resume",
+            select: "name email resume user",
+            populate: {
+              path: "user",
+              model: "User",
+              select: "name email",
+            },
           });
       }
+
       return res.status(200).json({
         user,
         profile,
@@ -81,14 +102,14 @@ export const getUserData = async (req, res) => {
         profileComplete: profile?.profileComplete || false,
       });
     } else if (user.role === "candidate") {
-      profile = await Candidate.findOne({ clerkId: clerkId });
+      profile = await Candidate.findOne({ clerkId }).populate("user", "name email");
+
       return res.status(200).json({
         user,
         profile,
         profileComplete: profile?.profileComplete || false,
       });
     }
-
   } catch (error) {
     console.error("Error fetching user with profile:", error);
     return res.status(500).json({ error: "Internal server error" });

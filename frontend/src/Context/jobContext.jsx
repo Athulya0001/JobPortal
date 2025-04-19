@@ -16,7 +16,7 @@ export const JobProvider = ({ children }) => {
   const recruiterId = useSelector((state) => state.auth.recruiterProfile?._id)
   const candidate = useSelector(state => state.auth.candidateProfile);
 
-
+  // save jobs
   const handleToggleSave = async (jobId) => {
     if (!user || user.role !== 'candidate') return;
   

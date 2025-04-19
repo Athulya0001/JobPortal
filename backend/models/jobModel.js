@@ -63,11 +63,18 @@ jobSchema.pre("save", function (next) {
   next();
 });
 
-jobSchema.pre("findOneAndUpdate", function (next) {
+jobSchema.pre("findOneAndUpdate", async function (next) {
   const update = this.getUpdate();
-  if (update.selected && update.numberOfVacancies !== undefined) {
-    update.isFilled = update.selected.length >= update.numberOfVacancies;
+  const jobId = this.getQuery()._id;
+
+  if (update.selected) {
+    const job = await this.model.findById(jobId);
+    const selected = update.selected.length ? update.selected : job.selected;
+    const numberOfVacancies = update.numberOfVacancies || job.numberOfVacancies;
+
+    update.isFilled = selected.length >= numberOfVacancies;
   }
+
   next();
 });
 

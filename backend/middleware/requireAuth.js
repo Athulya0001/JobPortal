@@ -3,6 +3,9 @@ import User from "../models/userModel.js";
 
 const requireAuth = ClerkExpressWithAuth({
   async onAuth(auth, req, res) {
+    if (req.method === "OPTIONS") {
+      return;
+    }
     if (!auth.userId) {
       return res.status(401).json({ success:false, error: "Unauthorized" });
     }
@@ -14,6 +17,7 @@ const requireAuth = ClerkExpressWithAuth({
     }
 
     req.user = user;
+    next();
   }
 });
 

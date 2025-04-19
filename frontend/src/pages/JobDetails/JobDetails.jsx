@@ -10,7 +10,6 @@ import { JobContext } from "../../Context/JobContext";
 
 const JobDetails = () => {
   const { id } = useParams();
-  const navigate = useNavigate();
   const user = useSelector((state) => state.auth.user);
   const recruiter = useSelector((state) => state.auth.recruiterProfile);
   const candidate = useSelector((state) => state.auth.candidateProfile);
