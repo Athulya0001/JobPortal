@@ -54,10 +54,10 @@ const RecruiterJobStatus = () => {
                       job.selected?.length || 0,
                     ],
                     backgroundColor: [
-                      "#6366F1",
-                      "#0096FF",
-                      "#34D399",
-                      "#F59E0B",
+                      "#6366F1", // Indigo
+                      "#0096FF", // Blue
+                      "#34D399", // Green
+                      "#F59E0B", // Amber
                     ],
                     borderRadius: 8,
                   },
@@ -76,19 +76,36 @@ const RecruiterJobStatus = () => {
                   },
                 },
                 scales: {
+                  x: {
+                    ticks: {
+                      color: darkMode ? "#fff" : "#000",
+                    },
+                    grid: {
+                      color: darkMode ? "#444" : "#e5e7eb",
+                    },
+                  },
                   y: {
                     beginAtZero: true,
                     ticks: {
                       precision: 0,
+                      color: darkMode ? "#fff" : "#000",
+                    },
+                    grid: {
+                      color: darkMode ? "#444" : "#e5e7eb",
                     },
                   },
                 },
               };
 
               return (
-                <div key={job._id} className="bg-gray-100 dark:bg-gray-800 p-4 rounded-lg shadow">
+                <div
+                  key={job._id}
+                  className={` ${darkMode ? "bg-gray-800": "bg-gray-100"} p-4 rounded-lg shadow`}
+                >
                   <Link to={`/job/${job._id}`}>
-                  <h3 className="text-xl font-semibold mb-2">{job.title}</h3>
+                    <h3 className="text-xl font-semibold mb-2 hover:underline text-[#0096FF]">
+                      {job.title}
+                    </h3>
                   </Link>
                   <div className="relative h-60">
                     <Bar data={chartData} options={chartOptions} />

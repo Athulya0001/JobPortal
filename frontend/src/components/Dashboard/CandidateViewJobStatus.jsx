@@ -8,7 +8,11 @@ const CandidateViewJobStatus = () => {
   const allJobs = useSelector((state) => state.jobs.allJobs);
 
   if (!candidateProfile || !allJobs) {
-    return <div><Loading/></div>;
+    return (
+      <div>
+        <Loading />
+      </div>
+    );
   }
 
   const getStatus = (jobId) => {
@@ -22,11 +26,15 @@ const CandidateViewJobStatus = () => {
   const appliedJobs = allJobs.filter((job) => appliedJobIds.includes(job._id));
 
   return (
-    <div>
-      <h2 className="text-2xl font-bold mb-6">Your Job Applications</h2>
+    <div className="px-4 sm:px-6 md:px-8 py-6">
+      <h2 className="text-xl sm:text-2xl font-bold mb-6 text-center sm:text-left">
+        Your Job Applications
+      </h2>
 
       {appliedJobs.length === 0 ? (
-        <p className="text-gray-500">You haven't applied to any jobs yet.</p>
+        <p className="text-gray-500 text-center sm:text-left">
+          You haven't applied to any jobs yet.
+        </p>
       ) : (
         <div className="space-y-6">
           {appliedJobs.map((job) => {
@@ -37,17 +45,17 @@ const CandidateViewJobStatus = () => {
                 key={job._id}
                 className="border border-gray-300 dark:border-gray-700 p-4 rounded-md shadow-sm"
               >
-                <div className="flex justify-between items-center">
+                <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3">
                   <div>
                     <Link to={`/job/${job._id}`}>
-                      <h3 className="text-xl font-semibold text-[#0096FF] hover:underline">
+                      <h3 className="text-lg sm:text-xl font-semibold text-[#0096FF] hover:underline">
                         {job.title}
                       </h3>
                     </Link>
                     <p className="text-sm text-gray-500">{job.company}</p>
                   </div>
                   <div
-                    className={`px-3 py-1 rounded-full text-sm font-medium capitalize ${
+                    className={`w-max px-3 py-1 rounded-full text-sm font-medium capitalize ${
                       status === "selected"
                         ? "bg-green-100 text-green-700"
                         : status === "shortlisted"

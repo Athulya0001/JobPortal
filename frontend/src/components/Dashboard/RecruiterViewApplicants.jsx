@@ -87,27 +87,29 @@ const RecruiterViewApplicants = () => {
 
   return (
     <div
-      className={`flex h-full min-h-screen ${
+      className={`flex flex-col min-h-screen ${
         darkMode ? "bg-gray-900 text-white" : "bg-white text-gray-900"
       }`}
     >
-      <div className="flex-1 p-6 overflow-y-auto max-w-6xl mx-auto">
-        <h1 className="text-3xl font-semibold mb-8">
+      <div className="w-full px-4 sm:px-6 lg:px-8 py-6 max-w-7xl mx-auto">
+        <h1 className="text-2xl sm:text-3xl font-semibold mb-6 sm:mb-8">
           Applicants for Your Jobs
         </h1>
+
         {jobsCreated.map((job) => (
           <div
             key={job._id}
-            className={`mb-8 rounded-xl p-6 border shadow-sm ${
+            className={`mb-6 sm:mb-8 rounded-xl p-4 sm:p-6 border shadow-sm ${
               darkMode ? "bg-gray-800 border-gray-700" : "bg-gray-50"
             }`}
           >
-            <h2 className="text-2xl font-bold text-[#0096ff] mb-2">
+            <h2 className="text-xl sm:text-2xl font-bold text-[#0096ff] mb-2">
               {job.title}
             </h2>
-            <h3 className="text-md font-semibold mb-2">
+            <h3 className="text-sm sm:text-md font-semibold mb-2">
               Vacancies: {job.numberOfVacancies}
             </h3>
+
             <div className="flex flex-wrap gap-2 mb-4">
               {job.skillsRequired?.map((skill, index) => (
                 <span
@@ -119,7 +121,9 @@ const RecruiterViewApplicants = () => {
               ))}
             </div>
 
-            <h3 className="text-xl font-semibold mb-3">Applicants</h3>
+            <h3 className="text-lg sm:text-xl font-semibold mb-3">
+              Applicants
+            </h3>
             {job.applicants?.length === 0 ? (
               <p className="text-gray-500">No applicants yet.</p>
             ) : (
@@ -152,14 +156,14 @@ const RecruiterViewApplicants = () => {
                   return (
                     <div
                       key={applicant?._id}
-                      className={`flex justify-between items-center rounded-lg p-4 border ${
+                      className={`flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 rounded-lg p-4 border ${
                         darkMode
                           ? "bg-gray-700 border-gray-600"
                           : "bg-white border-gray-300"
                       }`}
                     >
-                      <div>
-                        <p className="font-medium text-lg">
+                      <div className="flex-1">
+                        <p className="font-medium text-base sm:text-lg">
                           {applicant?.user?.name || "Unknown"}
                         </p>
                         <p className="text-sm text-gray-500">
@@ -174,14 +178,14 @@ const RecruiterViewApplicants = () => {
 
                         {statusText && (
                           <span
-                            className={`inline-block mt-2 px-3 py-1 ml-2 text-xs font-semibold rounded-full ${statusColor}`}
+                            className={`inline-block mt-2 px-3 py-1 ml-4 text-xs font-semibold rounded-full ${statusColor}`}
                           >
                             {statusText}
                           </span>
                         )}
                       </div>
 
-                      <div className="flex gap-3">
+                      <div className="flex flex-wrap gap-3 sm:justify-end">
                         {!isShortlisted && !isSelected && !job.isFilled && (
                           <button
                             onClick={() =>
@@ -225,6 +229,7 @@ const RecruiterViewApplicants = () => {
                             Selected
                           </button>
                         )}
+
                         {job.isFilled && (
                           <div className="text-sm px-3 py-1 bg-green-100 text-green-700 rounded-md inline-block">
                             Job Filled

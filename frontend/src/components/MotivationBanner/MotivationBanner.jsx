@@ -1,6 +1,6 @@
 import React from "react";
 import { motion } from "framer-motion";
-import Team from '../../assets/motive.jpg'
+import Team from "../../assets/motive.jpg";
 
 const MotivationBanner = () => {
   return (
@@ -18,9 +18,11 @@ const MotivationBanner = () => {
           Your future depends on today’s choices. Set goals, keep learning, and
           stay committed to growth for a better tomorrow.
         </p>
-        <button className="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-md transition duration-300">
-          Search Job
-        </button>
+        <a href="#search">
+          <button className="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-md transition duration-300">
+            Search Job
+          </button>
+        </a>
       </motion.div>
 
       <motion.div
@@ -39,4 +41,4 @@ const MotivationBanner = () => {
   );
 };
 
-export default MotivationBanner
+export default MotivationBanner;

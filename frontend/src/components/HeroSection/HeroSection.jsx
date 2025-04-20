@@ -10,7 +10,7 @@ const HeroSection = () => {
     <div
       className={`mt-20 md:mt-28 lg:mt-32 xl:mt-40 pt-6 h-auto flex flex-col items-center px-4 transition duration-300 ${
         darkMode ? 'text-white' : 'text-black'
-      }`}
+      }`} id='search'
     >
       <SearchBar />
 

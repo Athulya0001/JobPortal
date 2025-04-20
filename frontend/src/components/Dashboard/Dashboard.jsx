@@ -73,6 +73,7 @@ const Dashboard = () => {
         <nav className="space-y-2">
           <Link
             to="profile"
+            onClick={() => setIsSidebarOpen(false)}
             className="block px-4 py-2 rounded transition-all duration-200 hover:bg-[#007ACC] hover:text-gray-100"
           >
             View Profile
@@ -82,18 +83,21 @@ const Dashboard = () => {
             <>
               <Link
                 to="add-job"
+                onClick={() => setIsSidebarOpen(false)}
                 className="block px-4 py-2 rounded transition-all duration-200 hover:bg-[#007ACC] hover:text-gray-100"
               >
                 Add Job
               </Link>
               <Link
                 to="view-jobs"
+                onClick={() => setIsSidebarOpen(false)}
                 className="block px-4 py-2 rounded transition-all duration-200 hover:bg-[#007ACC] hover:text-gray-100"
               >
                 View Jobs
               </Link>
               <Link
                 to="view-applicants"
+                onClick={() => setIsSidebarOpen(false)}
                 className="block px-4 py-2 rounded transition-all duration-200 hover:bg-[#007ACC] hover:text-gray-100"
               >
                 View Applicants
@@ -103,18 +107,21 @@ const Dashboard = () => {
             <>
               <Link
                 to="applied-jobs"
+                onClick={() => setIsSidebarOpen(false)}
                 className="block px-4 py-2 rounded transition-all duration-200 hover:bg-[#007ACC] hover:text-gray-100"
               >
                 Applied Jobs
               </Link>
               <Link
                 to="saved-jobs"
+                onClick={() => setIsSidebarOpen(false)}
                 className="block px-4 py-2 rounded transition-all duration-200 hover:bg-[#007ACC] hover:text-gray-100"
               >
                 Saved Jobs
               </Link>
               <Link
                 to="job-status"
+                onClick={() => setIsSidebarOpen(false)}
                 className="block px-4 py-2 rounded transition-all duration-200 hover:bg-[#007ACC] hover:text-gray-100"
               >
                 Job Status
