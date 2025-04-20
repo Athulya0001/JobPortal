@@ -23,6 +23,7 @@ import Loading from "./components/Loading/Loading";
 import MotivationBanner from "./components/MotivationBanner/MotivationBanner";
 import RecruiterViewApplicants from "./components/Dashboard/RecruiterViewApplicants";
 import CandidateViewJobStatus from "./components/Dashboard/CandidateViewJobStatus";
+import Footer from "./components/Footer/Footer";
 
 function App() {
   const { isSignedIn, user } = useUser();
@@ -48,7 +49,7 @@ function App() {
   }, [isSignedIn, user, dispatch]);
 
   return (
-    <div className={`${darkMode ? "bg-gray-900" : "bg-white"} min-h-screen`}>
+    <div className={`${darkMode ? "bg-gray-900" : "bg-white"} min-h-screen overflow-x-hidden`}>
       <InitUser>
 
         <ToastContainer />
@@ -105,6 +106,7 @@ function App() {
             )}
           </Route>
         </Routes>
+        <Footer/>
       </InitUser>
 
     </div>
