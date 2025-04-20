@@ -24,6 +24,7 @@ import MotivationBanner from "./components/MotivationBanner/MotivationBanner";
 import RecruiterViewApplicants from "./components/Dashboard/RecruiterViewApplicants";
 import CandidateViewJobStatus from "./components/Dashboard/CandidateViewJobStatus";
 import Footer from "./components/Footer/Footer";
+import SearchResults from "./components/Search/SearchResults";
 
 function App() {
   const { isSignedIn, user } = useUser();
@@ -56,6 +57,7 @@ function App() {
         <Navbar />
         <Routes>
           <Route path="/" element={<Home />} />
+          <Route path="/search" element={<SearchResults />} />
 
           <Route path="/auth" element={<Navigate to="/" />} />
           <Route path="/dummy" element={<MotivationBanner/>}/>
