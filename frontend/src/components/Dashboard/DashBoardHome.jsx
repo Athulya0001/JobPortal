@@ -1,6 +1,7 @@
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import { useSelector } from "react-redux";
 import { ThemeContext } from "../../Context/ThemeContext";
+import { UserContext } from "../../Context/UserContext";
 
 const DashboardHome = () => {
   const recruiter = useSelector((state) => state.auth.recruiterProfile);
@@ -10,10 +11,15 @@ const DashboardHome = () => {
   const jobs = useSelector((state) =>
     isRecruiter ? state.auth.recruiterProfile?.jobsCreated: []
   );
+  const { fetchUserFromBackend } = useContext(UserContext);
   
   const { darkMode } = useContext(ThemeContext);
 
   const name = user?.name || user?.email;
+
+  useEffect(() => {
+    fetchUserFromBackend();
+  }, [fetchUserFromBackend]);
 
   return (
     <div className={`space-y-8 ${darkMode ? "bg-gray-900 text-white" : "bg-white text-black"}`}>

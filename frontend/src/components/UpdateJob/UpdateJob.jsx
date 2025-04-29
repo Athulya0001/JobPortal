@@ -1,16 +1,18 @@
-import { useState, useContext} from "react";
+import React, { useContext, useEffect, useState } from "react";
+import { useParams, useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 import { useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
 import { ThemeContext } from "../../Context/ThemeContext";
 import { JobContext } from "../../Context/JobContext";
-import { UserContext } from "../../Context/UserContext";
+import Loading from "../Loading/Loading";
 
-const RecruiterAddJob = () => {
+const UpdateJob = () => {
+  const { jobId } = useParams();
   const { darkMode } = useContext(ThemeContext);
-  const recruiter = useSelector((state) => state.auth.recruiterProfile);
-  const { addJob } = useContext(JobContext);
+  const { updateJob } = useContext(JobContext);
+  const allJobs = useSelector((state) => state.jobs.allJobs);
+  const job = allJobs.find((j) => j._id === jobId);
   const navigate = useNavigate();
-  const {fetchUserFromBackend} = useContext(UserContext)
 
   const [formData, setFormData] = useState({
     title: "",
@@ -18,11 +20,21 @@ const RecruiterAddJob = () => {
     skillsRequired: [],
     numberOfVacancies: 1,
     salary: "",
-    thumbnail: null,
   });
-
   const [skillInput, setSkillInput] = useState("");
   const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    if (job) {
+      setFormData({
+        title: job.title,
+        description: job.description,
+        skillsRequired: job.skillsRequired,
+        numberOfVacancies: job.numberOfVacancies,
+        salary: job.salary,
+      });
+    }
+  }, [job]);
 
   const handleChange = (e) => {
     setFormData((prev) => ({
@@ -52,14 +64,17 @@ const RecruiterAddJob = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
-    await addJob(formData, recruiter._id, navigate);
-    await fetchUserFromBackend()
+    await updateJob(jobId, formData);
+    toast.success("Job updated successfully");
+    navigate("/dashboard/view-jobs");
     setLoading(false);
   };
 
+  if (!job) return <Loading/>
+
   return (
     <div
-      className={`min-h-screen px-4 flex justify-center items-start ${
+      className={`min-h-screen px-4 flex justify-center items-start pt-10 ${
         darkMode ? "bg-gray-900 text-white" : "bg-white text-black"
       }`}
     >
@@ -69,7 +84,7 @@ const RecruiterAddJob = () => {
           darkMode ? "bg-gray-800" : "bg-gray-100"
         }`}
       >
-        <h2 className="text-2xl font-semibold mb-6 text-center">Add New Job</h2>
+        <h2 className="text-2xl font-semibold mb-6 text-center">Update Job</h2>
 
         <input
           name="title"
@@ -79,9 +94,7 @@ const RecruiterAddJob = () => {
           onChange={handleChange}
           required
           className={`w-full mb-4 p-2 rounded-md border ${
-            darkMode
-              ? "bg-gray-700 text-white border-gray-600"
-              : "bg-white border-gray-300"
+            darkMode ? "bg-gray-700 text-white border-gray-600" : "bg-white border-gray-300"
           }`}
         />
 
@@ -92,9 +105,7 @@ const RecruiterAddJob = () => {
           onChange={handleChange}
           required
           className={`w-full mb-4 p-2 rounded-md border h-32 ${
-            darkMode
-              ? "bg-gray-700 text-white border-gray-600"
-              : "bg-white border-gray-300"
+            darkMode ? "bg-gray-700 text-white border-gray-600" : "bg-white border-gray-300"
           }`}
         />
 
@@ -107,9 +118,7 @@ const RecruiterAddJob = () => {
               onChange={(e) => setSkillInput(e.target.value)}
               placeholder="Enter a skill"
               className={`flex-1 p-2 rounded-md border ${
-                darkMode
-                  ? "bg-gray-700 text-white border-gray-600"
-                  : "bg-white border-gray-300"
+                darkMode ? "bg-gray-700 text-white border-gray-600" : "bg-white border-gray-300"
               }`}
             />
             <button
@@ -147,9 +156,7 @@ const RecruiterAddJob = () => {
           onChange={handleChange}
           required
           className={`w-full mb-4 p-2 rounded-md border ${
-            darkMode
-              ? "bg-gray-700 text-white border-gray-600"
-              : "bg-white border-gray-300"
+            darkMode ? "bg-gray-700 text-white border-gray-600" : "bg-white border-gray-300"
           }`}
         />
 
@@ -160,22 +167,7 @@ const RecruiterAddJob = () => {
           value={formData.salary}
           onChange={handleChange}
           className={`w-full mb-6 p-2 rounded-md border ${
-            darkMode
-              ? "bg-gray-700 text-white border-gray-600"
-              : "bg-white border-gray-300"
-          }`}
-        />
-        <input
-          type="file"
-          accept="image/*"
-          placeholder="Thumbnail"
-          onChange={(e) =>
-            setFormData({ ...formData, thumbnail: e.target.files[0] })
-          }
-          className={`w-full mb-4 p-2 rounded-md border ${
-            darkMode
-              ? "bg-gray-700 text-white border-gray-600"
-              : "bg-white border-gray-300"
+            darkMode ? "bg-gray-700 text-white border-gray-600" : "bg-white border-gray-300"
           }`}
         />
 
@@ -184,11 +176,11 @@ const RecruiterAddJob = () => {
           className="w-full py-2 bg-[#0096ff] text-white font-semibold rounded-md hover:bg-[#007acc] transition"
           disabled={loading}
         >
-          {loading ? "Posting..." : "Post Job"}
+          {loading ? "Updating..." : "Update Job"}
         </button>
       </form>
     </div>
   );
 };
 
-export default RecruiterAddJob;
+export default UpdateJob;

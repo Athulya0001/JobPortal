@@ -16,7 +16,7 @@ const CandidateSavedJobs = () => {
     <section className={`py-10 px-4 transition duration-300 ${darkMode ? 'bg-gray-900 text-white' : 'bg-white text-black'}`}>
       <div className="max-w-6xl mx-auto">
         <h2 className="text-3xl font-bold mb-6 text-center text-[#0096ff]">Saved Jobs</h2>
-        <div className="flex flex-col gap-6">
+        <div className="flex flex-wrap gap-6">
           {savedJobs.length > 0 ? (
             savedJobs.map((job) => (
               <JobCard key={job._id} job={job} />

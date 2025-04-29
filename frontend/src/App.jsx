@@ -16,7 +16,6 @@ import CandidateAppliedJobs from "./components/Dashboard/CandidateAppliedJobs";
 import CandidateSavedJobs from "./components/Dashboard/CandidateSavedJobs";
 import JobDetails from "./pages/JobDetails/JobDetails";
 import { ThemeContext } from "./Context/ThemeContext";
-import InitUser from './utils/InitUser';
 import SigninWarn from "./components/SigninWarn/SIgninWarn";
 import DashboardHome from "./components/Dashboard/DashBoardHome";
 import Loading from "./components/Loading/Loading";
@@ -25,6 +24,9 @@ import RecruiterViewApplicants from "./components/Dashboard/RecruiterViewApplica
 import CandidateViewJobStatus from "./components/Dashboard/CandidateViewJobStatus";
 import Footer from "./components/Footer/Footer";
 import SearchResults from "./components/Search/SearchResults";
+import { JobContext } from "./Context/JobContext";
+import UpdateJob from "./components/UpdateJob/UpdateJob";
+import { UserContext } from "./Context/UserContext";
 
 function App() {
   const { isSignedIn, user } = useUser();
@@ -33,6 +35,18 @@ function App() {
   const profileComplete = useSelector((state) => state.auth.profileComplete);
 
   const { darkMode } = useContext(ThemeContext);
+  const { fetchAllJobs } = useContext(JobContext);
+  const { fetchUserFromBackend } = useContext(UserContext);
+
+  useEffect(() => {
+    fetchAllJobs();
+  }, [fetchAllJobs]);
+
+  useEffect(() => {
+    if (isSignedIn && user) {
+      fetchUserFromBackend();
+    }
+  }, [isSignedIn, user, fetchUserFromBackend]);
 
   useEffect(() => {
     if (!isSignedIn || !user) return;
@@ -44,73 +58,81 @@ function App() {
         profileImage: user.imageUrl,
         name: user.fullName,
         role: user.publicMetadata?.role || null,
-        profileComplete: user.publicMetadata?.isProfileComplete || false
+        profileComplete: user.publicMetadata?.isProfileComplete || false,
       })
     );
   }, [isSignedIn, user, dispatch]);
+  if (isSignedIn && !user) return <Loading />;
 
   return (
-    <div className={`${darkMode ? "bg-gray-900" : "bg-white"} min-h-screen overflow-x-hidden`}>
-      <InitUser>
+    <div
+      className={`${
+        darkMode ? "bg-gray-900" : "bg-white"
+      } min-h-screen overflow-x-hidden`}
+    >
+      <ToastContainer />
+      <Navbar />
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/search" element={<SearchResults />} />
 
-        <ToastContainer />
-        <Navbar />
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/search" element={<SearchResults />} />
+        <Route path="/auth" element={<Navigate to="/" />} />
+        <Route path="/dummy" element={<MotivationBanner />} />
 
-          <Route path="/auth" element={<Navigate to="/" />} />
-          <Route path="/dummy" element={<MotivationBanner/>}/>
+        <Route
+          path="/set-role"
+          element={
+            isSignedIn && !role ? (
+              <RoleSelection />
+            ) : (
+              <Navigate to="/dashboard" />
+            )
+          }
+        />
 
-          <Route path="/set-role" element={isSignedIn && !role ? <RoleSelection /> : <Navigate to="/dashboard" />} />
+        <Route
+          path="/job/:id"
+          element={isSignedIn ? <JobDetails /> : <SigninWarn />}
+        />
+        <Route path="/update-job/:jobId" element={<UpdateJob />} />
 
-          <Route
-            path="/job/:id"
-            element={
-              isSignedIn ? (
-                <JobDetails />
-              ) : (
-                <SigninWarn />
-              )
-            }
-          />
+        <Route
+          path="/dashboard"
+          element={
+            !isSignedIn ? (
+              <Navigate to="/auth" />
+            ) : !role ? (
+              <Navigate to="/set-role" />
+            ) : !profileComplete ? (
+              <SetProfile />
+            ) : (
+              <Dashboard />
+            )
+          }
+        >
+          <Route index element={<DashboardHome />} />
+          <Route path="profile" element={<ProfilePage />} />
 
-          <Route
-            path="/dashboard"
-            element={
-              !isSignedIn ? (
-                <Navigate to="/auth" />
-              ) : !role ? (
-                <Navigate to="/set-role" />
-              ) : !profileComplete ? (
-                <SetProfile />
-              ) : (
-                <Dashboard />
-              )
-            }
-          >
-            <Route index element={<DashboardHome />} />
-            <Route path="profile" element={<ProfilePage />} />
-
-            {role === "recruiter" && (
-              <>
-                <Route path="add-job" element={<RecruiterAddJob />} />
-                <Route path="view-jobs" element={<RecruiterViewJobs />} />
-                <Route path="view-applicants" element={<RecruiterViewApplicants />} />
-              </>
-            )}
-            {role === "candidate" && (
-              <>
-                <Route path="applied-jobs" element={<CandidateAppliedJobs />} />
-                <Route path="saved-jobs" element={<CandidateSavedJobs />} />
-                <Route path="job-status" element={<CandidateViewJobStatus />} />
-              </>
-            )}
-          </Route>
-        </Routes>
-        <Footer/>
-      </InitUser>
-
+          {role === "recruiter" && (
+            <>
+              <Route path="add-job" element={<RecruiterAddJob />} />
+              <Route path="view-jobs" element={<RecruiterViewJobs />} />
+              <Route
+                path="view-applicants"
+                element={<RecruiterViewApplicants />}
+              />
+            </>
+          )}
+          {role === "candidate" && (
+            <>
+              <Route path="applied-jobs" element={<CandidateAppliedJobs />} />
+              <Route path="saved-jobs" element={<CandidateSavedJobs />} />
+              <Route path="job-status" element={<CandidateViewJobStatus />} />
+            </>
+          )}
+        </Route>
+      </Routes>
+      <Footer />
     </div>
   );
 }

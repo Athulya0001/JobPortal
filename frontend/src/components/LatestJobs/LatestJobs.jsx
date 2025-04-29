@@ -10,14 +10,11 @@ const LatestJobs = () => {
   const jobs = useSelector((state) => state.jobs.allJobs);
   const { darkMode } = useContext(ThemeContext);
   const navigate = useNavigate();
-  const { fetchAllJobs, handleToggleSave } = useContext(JobContext);
+  const { handleToggleSave } = useContext(JobContext);
   const candidate = useSelector((state) => state.auth.candidateProfile);
   const recruiter = useSelector((state) => state.auth.recruiterProfile);
   const user = useSelector((state) => state.auth.user);
 
-  useEffect(() => {
-    fetchAllJobs();
-  }, [fetchAllJobs]);
 
   const filteredJobs =
     user?.role === "recruiter"

@@ -54,6 +54,35 @@ export const addJob = async (req, res) => {
   }
 };
 
+// delete job
+export const deleteJob = async (req, res) => {
+  try {
+    const jobId = req.params.id;
+    await Job.findByIdAndDelete(jobId);
+    const jobs = await Job.find().sort({ createdAt: -1 });
+    res.status(200).json({ success: true, jobs });
+  } catch (err) {
+    console.error("Delete Job Error:", err);
+    res.status(500).json({ success: false, message: "Failed to delete job" });
+  }
+};
+
+// Update job
+export const updateJob = async (req, res) => {
+  try {
+    const jobId = req.params.id;
+    const updateFields = req.body;
+
+    const updatedJob = await Job.findByIdAndUpdate(jobId, updateFields, { new: true });
+
+    const jobs = await Job.find().sort({ createdAt: -1 });
+    res.status(200).json({ success: true, updatedJob, jobs });
+  } catch (err) {
+    console.error("Update Job Error:", err);
+    res.status(500).json({ success: false, message: "Failed to update job" });
+  }
+}
+
 // job details
 export const getAllJobs = async (req, res) => {
   try {

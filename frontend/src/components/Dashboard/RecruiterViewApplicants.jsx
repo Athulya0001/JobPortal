@@ -4,20 +4,20 @@ import { toast } from "react-toastify";
 import axios from "axios";
 import { ThemeContext } from "../../Context/ThemeContext";
 import { setUser } from "../../Redux/Reducers/authSlice";
+import { UserContext } from "../../Context/UserContext";
 
 const RecruiterViewApplicants = () => {
   const jobsCreated = useSelector(
     (state) => state.auth.recruiterProfile?.jobsCreated
   );
   const user = useSelector((state) => state.auth.user);
-  const recruiterProfile = useSelector((state) => state.auth.recruiterProfile);
-  const profileComplete = useSelector((state) => state.auth.profileComplete);
   const [resumeUrl, setResumeUrl] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const { darkMode } = useContext(ThemeContext);
   const [loadingStatus, setLoadingStatus] = useState({});
   const [action, setAction] = useState("");
   const dispatch = useDispatch();
+  const {fetchUserFromBackend} = useContext(UserContext)
 
   const openResumeModal = (url) => {
     setResumeUrl(url);
@@ -51,19 +51,7 @@ const RecruiterViewApplicants = () => {
         } else {
           toast.success(`Candidate ${actionType}ed successfully.`);
         }
-
-        // const updatedJobs = jobsCreated.map((j) =>
-        //   j._id === job._id ? job : j
-        // );
-
-        // dispatch(
-        //   setUser({
-        //     ...user,
-        //     profileComplete,
-        //     profile: recruiterProfile,
-        //     jobsCreated: updatedJobs,
-        //   })
-        // );
+        await fetchUserFromBackend()
       }
     } catch (error) {
       toast.error(`Failed to ${actionType} candidate.`);

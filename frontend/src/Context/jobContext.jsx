@@ -1,7 +1,7 @@
-import React, { createContext, useState, useEffect, useContext } from 'react';
+import React, { createContext, useState, useEffect, useContext, useCallback } from 'react';
 import axios from 'axios';
 import { useDispatch, useSelector } from 'react-redux';
-import { setAllJobs, setJobs } from '../Redux/Reducers/jobSlice';
+import { addJob as addJobToRedux, setAllJobs, setJobs } from '../Redux/Reducers/jobSlice';
 import {toast} from 'react-toastify' 
 import { updateCandidateSavedJobs } from '../Redux/Reducers/authSlice';
 
@@ -15,6 +15,72 @@ export const JobProvider = ({ children }) => {
   const dispatch = useDispatch();
   const recruiterId = useSelector((state) => state.auth.recruiterProfile?._id)
   const candidate = useSelector(state => state.auth.candidateProfile);
+
+   // Add job
+   const addJob = async (formData, recruiterId, navigate) => {
+    try {
+      const formDataToSend = new FormData();
+      formDataToSend.append("title", formData.title);
+      formDataToSend.append("description", formData.description);
+      formDataToSend.append("skillsRequired", JSON.stringify(formData.skillsRequired));
+      formDataToSend.append("numberOfVacancies", formData.numberOfVacancies);
+      formDataToSend.append("salary", formData.salary);
+      formDataToSend.append("createdBy", recruiterId);
+
+      if (formData.thumbnail) {
+        formDataToSend.append("thumbnail", formData.thumbnail);
+      }
+
+      const res = await axios.post("http://localhost:4000/api/job/add", formDataToSend, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
+
+      if (res.data.success) {
+        dispatch(addJobToRedux(res.data.job));
+        toast.success("Job posted successfully!");
+        navigate("/dashboard");
+      } else {
+        toast.error(res.data.message || "Error posting job");
+      }
+    } catch (err) {
+      console.error(err);
+      toast.error("Server error");
+    }
+  };
+
+  // Delete job
+  const deleteJob = async (jobId) => {
+    try {
+      const res = await axios.delete(`http://localhost:4000/api/job/${jobId}`);
+      if (res.data.success) {
+        dispatch(setJobs(res.data.jobs));
+        toast.success("Job deleted successfully");
+      } else {
+        toast.error(res.data.message || "Failed to delete job");
+      }
+    } catch (error) {
+      console.error(error);
+      toast.error("Server error while deleting job");
+    }
+  };
+
+  // Update job
+  const updateJob = async (jobId, updatedData) => {
+    try {
+      const res = await axios.put(`http://localhost:4000/api/job/${jobId}`, updatedData);
+      if (res.data.success) {
+        dispatch(setJobs(res.data.jobs)); // assuming updated job list is returned
+        toast.success("Job updated successfully");
+      } else {
+        toast.error(res.data.message || "Failed to update job");
+      }
+    } catch (error) {
+      console.error(error);
+      toast.error("Server error while updating job");
+    }
+  };
 
   // save jobs
   const handleToggleSave = async (jobId) => {
@@ -39,14 +105,17 @@ export const JobProvider = ({ children }) => {
   };
 
   // fetch all jobs
-  const fetchAllJobs = async () => {
+  const fetchAllJobs = useCallback(async () => {
     setLoading(true);
     try {
       const res = await axios.get(`http://localhost:4000/api/job`);
       if (res.data.success) {
         dispatch(setAllJobs(res.data.jobs));
-        const recruiterJob = res.data.jobs.filter((job) => recruiterId === job.createdBy)
-        dispatch(setJobs(recruiterJob))
+    
+        if (recruiterId) {
+          const recruiterJob = res.data.jobs.filter((job) => job.createdBy === recruiterId);
+          dispatch(setJobs(recruiterJob));
+        }
       }
     } catch (err) {
       setError('Error fetching all jobs');
@@ -54,10 +123,11 @@ export const JobProvider = ({ children }) => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [dispatch]);
+  
 
   return (
-    <JobContext.Provider value={{ fetchAllJobs, handleToggleSave, loading, error }}>
+    <JobContext.Provider value={{addJob, deleteJob, updateJob, fetchAllJobs, handleToggleSave, loading, error }}>
       {children}
     </JobContext.Provider>
   );

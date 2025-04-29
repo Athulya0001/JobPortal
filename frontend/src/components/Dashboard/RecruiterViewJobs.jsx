@@ -21,7 +21,7 @@ const RecruiterViewJobs = () => {
         <h2 className="text-3xl font-semibold mb-6">Your Posted Jobs</h2>
 
         {jobs.length > 0 ? (
-          <div className="flex flex-col gap-6">
+          <div className="flex flex-wrap gap-6">
             {jobs.map((job) => (
               <JobCard key={job._id} job={job} darkMode={darkMode} />
             ))}

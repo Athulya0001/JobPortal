@@ -1,31 +1,33 @@
 import React, { useContext, useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { useSelector, useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
 import { ThemeContext } from "../../Context/ThemeContext";
 import { FaMapMarkerAlt, FaDollarSign, FaBookmark, FaRegBookmark } from "react-icons/fa";
 import axios from "axios";
 import Loading from "../../components/Loading/Loading";
 import { toast } from "react-toastify";
 import { JobContext } from "../../Context/JobContext";
+import { UserContext } from "../../Context/UserContext";
 
 const JobDetails = () => {
   const { id } = useParams();
+  const navigate = useNavigate();
   const user = useSelector((state) => state.auth.user);
   const recruiter = useSelector((state) => state.auth.recruiterProfile);
   const candidate = useSelector((state) => state.auth.candidateProfile);
   const { darkMode } = useContext(ThemeContext);
   const { handleToggleSave } = useContext(JobContext);
+  const {fetchUserFromBackend} = useContext(UserContext)
+
   const [job, setJob] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const hasApplied = job?.applicants?.includes(candidate?._id);
 
+  const hasApplied = job?.applicants?.includes(candidate?._id);
   const isOwnJob = recruiter?.user === user?._id;
   const isSaved = candidate?.savedJobs?.includes(job?._id);
 
   const fetchJob = async (jobId) => {
-    if (!jobId) return;
-
     try {
       const res = await axios.get(`http://localhost:4000/api/job/${jobId}`);
       if (res.data.success) {
@@ -34,8 +36,8 @@ const JobDetails = () => {
         setError("Job not found");
       }
     } catch (err) {
-      setError("Error fetching job");
       console.error("Error fetching job:", err);
+      setError("Error fetching job");
     } finally {
       setLoading(false);
     }
@@ -67,13 +69,19 @@ const JobDetails = () => {
           ...prevJob,
           applicants: [...prevJob.applicants, user._id],
         }));
+        await fetchUserFromBackend()
+        await fetchJob(id)
       } else {
         toast.error(response.data.message || "Failed to apply for the job.");
       }
     } catch (err) {
-      toast.error("An error occurred while applying. Please try again.");
       console.error("Error applying for job:", err);
+      toast.error("An error occurred while applying. Please try again.");
     }
+  };
+
+  const handleViewApplicants = () => {
+    navigate("/dashboard/view-applicants");
   };
 
   if (loading) return <Loading />;
@@ -83,17 +91,18 @@ const JobDetails = () => {
   return (
     <div className={`min-h-screen pt-[80px] ${darkMode ? "bg-gray-900 text-white" : "bg-white text-gray-900"}`}>
       <div className="mx-auto px-6 py-5 max-w-7xl">
-        <div className="flex justify-between">
+        <div className="flex justify-between items-start">
           <h1 className="text-3xl font-bold mb-4">{job.title}</h1>
-          {user?.role==='candidate'&&(
+          {user?.role === "candidate" && (
             <button
-            onClick={() => handleToggleSave(job._id)}
-            className=" text-2xl text-[#0096FF] cursor-pointer"
-          >
-            {isSaved ? <FaBookmark /> : <FaRegBookmark />}
-          </button>
+              onClick={() => handleToggleSave(job._id)}
+              className="text-2xl text-[#0096FF] cursor-pointer"
+            >
+              {isSaved ? <FaBookmark /> : <FaRegBookmark />}
+            </button>
           )}
         </div>
+
         <h2 className="text-xl font-semibold mb-2 text-[#0096ff]">{job.createdBy?.companyDetails.name}</h2>
 
         <div className="flex items-center gap-3 text-sm mb-4">
@@ -122,29 +131,25 @@ const JobDetails = () => {
         </div>
 
         <div className="flex justify-between mt-6">
-          <div className="text-center">
-            {user?.role === "recruiter" && isOwnJob ? (
-              <button
-                onClick={() => {
-                  console.log("View Applicants clicked");
-                }}
-                className="px-6 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition"
-              >
-                View Applicants
-              </button>
-            ) : user?.role === "candidate" ? (
-              <button
-                onClick={handleApply}
-                disabled={hasApplied}
-                className={`px-6 py-2 rounded transition ${hasApplied
-                    ? "bg-gray-500 cursor-not-allowed"
-                    : "bg-green-600 hover:bg-green-700 text-white"
-                  }`}
-              >
-                {hasApplied ? "Applied" : "Apply Now"}
-              </button>
-            ) : null}
-          </div>
+          {user?.role === "recruiter" && isOwnJob ? (
+            <button
+              onClick={handleViewApplicants}
+              className="px-6 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition"
+            >
+              View Applicants
+            </button>
+          ) : user?.role === "candidate" ? (
+            <button
+              onClick={handleApply}
+              disabled={hasApplied}
+              className={`px-6 py-2 rounded transition ${hasApplied
+                ? "bg-gray-500 cursor-not-allowed"
+                : "bg-green-600 hover:bg-green-700 text-white"
+              }`}
+            >
+              {hasApplied ? "Applied" : "Apply Now"}
+            </button>
+          ) : null}
         </div>
       </div>
     </div>

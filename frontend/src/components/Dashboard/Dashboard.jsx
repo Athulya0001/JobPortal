@@ -1,8 +1,9 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import { useSelector } from "react-redux";
 import { Link, Outlet } from "react-router-dom";
 import { FiMenu, FiX } from "react-icons/fi";
 import { ThemeContext } from "../../Context/ThemeContext";
+import Loading from "../Loading/Loading";
 
 const Dashboard = () => {
   const role = useSelector((state) => state.auth.user?.role);
@@ -79,62 +80,64 @@ const Dashboard = () => {
             View Profile
           </Link>
 
-          {role === "recruiter" ? (
-            <>
-              <Link
-                to="add-job"
-                onClick={() => setIsSidebarOpen(false)}
-                className="block px-4 py-2 rounded transition-all duration-200 hover:bg-[#007ACC] hover:text-gray-100"
-              >
-                Add Job
-              </Link>
-              <Link
-                to="view-jobs"
-                onClick={() => setIsSidebarOpen(false)}
-                className="block px-4 py-2 rounded transition-all duration-200 hover:bg-[#007ACC] hover:text-gray-100"
-              >
-                View Jobs
-              </Link>
-              <Link
-                to="view-applicants"
-                onClick={() => setIsSidebarOpen(false)}
-                className="block px-4 py-2 rounded transition-all duration-200 hover:bg-[#007ACC] hover:text-gray-100"
-              >
-                View Applicants
-              </Link>
-            </>
+          {role ? (
+            role === "recruiter" ? (
+              <>
+                <Link
+                  to="add-job"
+                  onClick={() => setIsSidebarOpen(false)}
+                  className="block px-4 py-2 rounded transition-all duration-200 hover:bg-[#007ACC] hover:text-gray-100"
+                >
+                  Add Job
+                </Link>
+                <Link
+                  to="view-jobs"
+                  onClick={() => setIsSidebarOpen(false)}
+                  className="block px-4 py-2 rounded transition-all duration-200 hover:bg-[#007ACC] hover:text-gray-100"
+                >
+                  View Jobs
+                </Link>
+                <Link
+                  to="view-applicants"
+                  onClick={() => setIsSidebarOpen(false)}
+                  className="block px-4 py-2 rounded transition-all duration-200 hover:bg-[#007ACC] hover:text-gray-100"
+                >
+                  View Applicants
+                </Link>
+              </>
+            ) : (
+              <>
+                <Link
+                  to="applied-jobs"
+                  onClick={() => setIsSidebarOpen(false)}
+                  className="block px-4 py-2 rounded transition-all duration-200 hover:bg-[#007ACC] hover:text-gray-100"
+                >
+                  Applied Jobs
+                </Link>
+                <Link
+                  to="saved-jobs"
+                  onClick={() => setIsSidebarOpen(false)}
+                  className="block px-4 py-2 rounded transition-all duration-200 hover:bg-[#007ACC] hover:text-gray-100"
+                >
+                  Saved Jobs
+                </Link>
+                <Link
+                  to="job-status"
+                  onClick={() => setIsSidebarOpen(false)}
+                  className="block px-4 py-2 rounded transition-all duration-200 hover:bg-[#007ACC] hover:text-gray-100"
+                >
+                  Job Status
+                </Link>
+              </>
+            )
           ) : (
-            <>
-              <Link
-                to="applied-jobs"
-                onClick={() => setIsSidebarOpen(false)}
-                className="block px-4 py-2 rounded transition-all duration-200 hover:bg-[#007ACC] hover:text-gray-100"
-              >
-                Applied Jobs
-              </Link>
-              <Link
-                to="saved-jobs"
-                onClick={() => setIsSidebarOpen(false)}
-                className="block px-4 py-2 rounded transition-all duration-200 hover:bg-[#007ACC] hover:text-gray-100"
-              >
-                Saved Jobs
-              </Link>
-              <Link
-                to="job-status"
-                onClick={() => setIsSidebarOpen(false)}
-                className="block px-4 py-2 rounded transition-all duration-200 hover:bg-[#007ACC] hover:text-gray-100"
-              >
-                Job Status
-              </Link>
-            </>
+            <Loading />
           )}
         </nav>
       </aside>
 
       <main
-        className={`flex-1 overflow-y-auto p-4 md:p-6 transition-all duration-300 ${
-          isSidebarOpen ? "overflow-hidden h-screen" : ""
-        } ${darkMode ? "bg-gray-900 text-white" : "bg-white text-gray-900"}`}
+        className={`flex-1 p-4 md:p-6 transition-all duration-300 ${isSidebarOpen ? "overflow-hidden" : "overflow-y-auto"} ${darkMode ? "bg-gray-900 text-white" : "bg-white text-gray-900"}`}
       >
         <Outlet />
       </main>

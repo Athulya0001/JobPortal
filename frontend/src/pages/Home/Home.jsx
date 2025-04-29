@@ -9,11 +9,17 @@ import MotivationBanner from '../../components/MotivationBanner/MotivationBanner
 import RecommendedJobs from '../../components/RecommendedJobs/RecommendedJobs';
 import { useSelector } from 'react-redux';
 import RecruiterJobStatus from '../../components/RecruiterJobsStatus/RecruiterJobStatus';
+import Loading from '../../components/Loading/Loading';
+import { useUser } from '@clerk/clerk-react';
 
 const Home = () => {
   const { darkMode } = useContext(ThemeContext);
   const user = useSelector((state) => state.auth.user)
+  const {isSignedIn} = useUser()
   const isRecruiter = user?.role === "recruiter";
+
+  const role = user?.role
+  if(isSignedIn && !role)return <Loading/>
 
   return (
     <div
