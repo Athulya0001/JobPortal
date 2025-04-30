@@ -12,6 +12,7 @@ import { ThemeContext } from "../../Context/ThemeContext";
 import { toast } from "react-toastify";
 import { setUser } from "../../Redux/Reducers/authSlice";
 import Loading from "../Loading/Loading";
+import PDFViewer from "../PDFViewer/PDFViewer";
 
 const ProfilePage = () => {
   const { darkMode } = useContext(ThemeContext);
@@ -195,13 +196,7 @@ const ProfilePage = () => {
                 </p>
                 {profile?.resume ? (
                   <div className="flex justify-center">
-                    <iframe
-                      src={profile.resume}
-                      title="Resume Preview"
-                      width="100%"
-                      height="500px"
-                      className="rounded-md shadow-lg border"
-                    />
+                    <PDFViewer fileUrl={profile.resume}/>
                   </div>
                 ) : (
                   <p className="italic text-gray-400">No resume uploaded.</p>
@@ -276,13 +271,7 @@ const ProfilePage = () => {
                 {formData.resume && typeof formData.resume === "string" && (
                   <div className="mt-4">
                     <p className="text-sm font-medium mb-1">Current Resume Preview:</p>
-                    <iframe
-                      src={formData.resume}
-                      title="Resume Preview"
-                      width="100%"
-                      height="400px"
-                      className="rounded-md shadow-md border"
-                    />
+                    <PDFViewer fileUrl={formData.resume}/>
                   </div>
                 )}
 

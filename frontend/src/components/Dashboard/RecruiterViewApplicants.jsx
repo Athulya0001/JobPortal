@@ -3,8 +3,9 @@ import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import axios from "axios";
 import { ThemeContext } from "../../Context/ThemeContext";
-import { setUser } from "../../Redux/Reducers/authSlice";
 import { UserContext } from "../../Context/UserContext";
+import PDFViewer from "../PDFViewer/PDFViewer";
+import { AiOutlineClose } from "react-icons/ai";
 
 const RecruiterViewApplicants = () => {
   const jobsCreated = useSelector(
@@ -17,7 +18,7 @@ const RecruiterViewApplicants = () => {
   const [loadingStatus, setLoadingStatus] = useState({});
   const [action, setAction] = useState("");
   const dispatch = useDispatch();
-  const {fetchUserFromBackend} = useContext(UserContext)
+  const { fetchUserFromBackend } = useContext(UserContext);
 
   const openResumeModal = (url) => {
     setResumeUrl(url);
@@ -51,7 +52,7 @@ const RecruiterViewApplicants = () => {
         } else {
           toast.success(`Candidate ${actionType}ed successfully.`);
         }
-        await fetchUserFromBackend()
+        await fetchUserFromBackend();
       }
     } catch (error) {
       toast.error(`Failed to ${actionType} candidate.`);
@@ -233,19 +234,16 @@ const RecruiterViewApplicants = () => {
         ))}
 
         {isModalOpen && (
-          <div className="fixed inset-0 z-50 bg-black bg-opacity-50 flex justify-center items-center px-4">
-            <div className="relative w-full max-w-4xl bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden">
+          <div className="fixed inset-0 z-50 bg-black bg-opacity-50 flex justify-center items-center px-2">
+            <div className="relative w-full max-w-2xl bg-white dark:bg-gray-800 rounded-lg shadow-lg overflow-hidden py-3 px-4">
               <button
                 onClick={closeModal}
-                className="absolute top-3 right-4 text-gray-600 dark:text-gray-300 hover:text-red-500 text-2xl"
+                className="absolute top-15 right-2 text-gray-600 dark:text-gray-300 hover:text-red-500 font-bold text-2xl z-10"
               >
-                &times;
+                <AiOutlineClose />
               </button>
-              <iframe
-                src={resumeUrl}
-                title="Resume Viewer"
-                className="w-full h-[85vh] border-none"
-              />
+
+              <PDFViewer fileUrl={resumeUrl} />
             </div>
           </div>
         )}
