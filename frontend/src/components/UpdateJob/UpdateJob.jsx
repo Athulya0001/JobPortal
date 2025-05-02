@@ -65,12 +65,11 @@ const UpdateJob = () => {
     e.preventDefault();
     setLoading(true);
     await updateJob(jobId, formData);
-    toast.success("Job updated successfully");
-    navigate("/dashboard/view-jobs");
     setLoading(false);
+    navigate("/dashboard");
   };
 
-  if (!job) return <Loading/>
+  if (!job) return <Loading />;
 
   return (
     <div
@@ -94,7 +93,9 @@ const UpdateJob = () => {
           onChange={handleChange}
           required
           className={`w-full mb-4 p-2 rounded-md border ${
-            darkMode ? "bg-gray-700 text-white border-gray-600" : "bg-white border-gray-300"
+            darkMode
+              ? "bg-gray-700 text-white border-gray-600"
+              : "bg-white border-gray-300"
           }`}
         />
 
@@ -105,7 +106,9 @@ const UpdateJob = () => {
           onChange={handleChange}
           required
           className={`w-full mb-4 p-2 rounded-md border h-32 ${
-            darkMode ? "bg-gray-700 text-white border-gray-600" : "bg-white border-gray-300"
+            darkMode
+              ? "bg-gray-700 text-white border-gray-600"
+              : "bg-white border-gray-300"
           }`}
         />
 
@@ -116,9 +119,17 @@ const UpdateJob = () => {
               type="text"
               value={skillInput}
               onChange={(e) => setSkillInput(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  e.preventDefault();
+                  handleSkillAdd();
+                }
+              }}
               placeholder="Enter a skill"
               className={`flex-1 p-2 rounded-md border ${
-                darkMode ? "bg-gray-700 text-white border-gray-600" : "bg-white border-gray-300"
+                darkMode
+                  ? "bg-gray-700 text-white border-gray-600"
+                  : "bg-white border-gray-300"
               }`}
             />
             <button
@@ -156,7 +167,9 @@ const UpdateJob = () => {
           onChange={handleChange}
           required
           className={`w-full mb-4 p-2 rounded-md border ${
-            darkMode ? "bg-gray-700 text-white border-gray-600" : "bg-white border-gray-300"
+            darkMode
+              ? "bg-gray-700 text-white border-gray-600"
+              : "bg-white border-gray-300"
           }`}
         />
 
@@ -167,7 +180,9 @@ const UpdateJob = () => {
           value={formData.salary}
           onChange={handleChange}
           className={`w-full mb-6 p-2 rounded-md border ${
-            darkMode ? "bg-gray-700 text-white border-gray-600" : "bg-white border-gray-300"
+            darkMode
+              ? "bg-gray-700 text-white border-gray-600"
+              : "bg-white border-gray-300"
           }`}
         />
 

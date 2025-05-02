@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { addJob as addJobToRedux, setAllJobs, setJobs } from '../Redux/Reducers/jobSlice';
 import {toast} from 'react-toastify' 
 import { updateCandidateSavedJobs } from '../Redux/Reducers/authSlice';
+import { useNavigate } from 'react-router-dom';
 
 
 export const JobContext = createContext();
@@ -13,6 +14,7 @@ export const JobProvider = ({ children }) => {
   const [error, setError] = useState(null);
   const user = useSelector(state => state.auth.user);
   const dispatch = useDispatch();
+  const navigate = useNavigate()
   const recruiterId = useSelector((state) => state.auth.recruiterProfile?._id)
   const candidate = useSelector(state => state.auth.candidateProfile);
 
@@ -52,10 +54,12 @@ export const JobProvider = ({ children }) => {
 
   // Delete job
   const deleteJob = async (jobId) => {
+    setLoading(true)
     try {
       const res = await axios.delete(`http://localhost:4000/api/job/${jobId}`);
       if (res.data.success) {
-        dispatch(setJobs(res.data.jobs));
+        dispatch(setAllJobs(res.data.jobs));
+        navigate("/dashboard")
         toast.success("Job deleted successfully");
       } else {
         toast.error(res.data.message || "Failed to delete job");
@@ -63,6 +67,8 @@ export const JobProvider = ({ children }) => {
     } catch (error) {
       console.error(error);
       toast.error("Server error while deleting job");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -71,7 +77,7 @@ export const JobProvider = ({ children }) => {
     try {
       const res = await axios.put(`http://localhost:4000/api/job/${jobId}`, updatedData);
       if (res.data.success) {
-        dispatch(setJobs(res.data.jobs)); // assuming updated job list is returned
+        dispatch(setAllJobs(res.data.jobs));
         toast.success("Job updated successfully");
       } else {
         toast.error(res.data.message || "Failed to update job");

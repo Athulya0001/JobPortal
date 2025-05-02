@@ -36,6 +36,12 @@ const SearchBar = () => {
           placeholder="Job Title / Skill"
           value={title}
           onChange={(e) => setTitle(e.target.value)}
+          onKeyDown={(e) => {
+            if (e.key === "Enter") {
+              e.preventDefault();
+              handleSearch();
+            }
+          }}
           className={`px-4 py-2 border rounded-md w-full focus:outline-none focus:ring-2 ${
             darkMode
               ? 'bg-gray-700 text-white placeholder-gray-400 border-gray-600 focus:ring-[#0096FF]'
@@ -47,6 +53,12 @@ const SearchBar = () => {
           placeholder="Location"
           value={location}
           onChange={(e) => setLocation(e.target.value)}
+          onKeyDown={(e) => {
+            if (e.key === "Enter") {
+              e.preventDefault();
+              handleSearch();
+            }
+          }}
           className={`px-4 py-2 border rounded-md w-full focus:outline-none focus:ring-2 ${
             darkMode
               ? 'bg-gray-700 text-white placeholder-gray-400 border-gray-600 focus:ring-[#0096FF]'

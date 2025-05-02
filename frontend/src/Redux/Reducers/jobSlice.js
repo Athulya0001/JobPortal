@@ -16,16 +16,19 @@ const jobSlice = createSlice({
       state.allJobs = action.payload;
     },
     addJob: (state, action) => {
-      state.jobs.push(action.payload);
+      state.jobs.push(action.payload)
+      state.allJobs.push(action.payload)
     },
     updateJob: (state, action) => {
       const index = state.jobs.findIndex(job => job._id === action.payload._id);
+
       if (index !== -1) {
         state.jobs[index] = action.payload;
       }
     },
     removeJob: (state, action) => {
       state.jobs = state.jobs.filter(job => job._id !== action.payload);
+      state.allJobs = state.allJobs.filter(job => job._id !== action.payload);
     },
     clearJobs: (state) => {
       state.jobs = [];

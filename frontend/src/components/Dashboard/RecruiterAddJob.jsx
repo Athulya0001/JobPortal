@@ -105,6 +105,12 @@ const RecruiterAddJob = () => {
               type="text"
               value={skillInput}
               onChange={(e) => setSkillInput(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  e.preventDefault();
+                  handleSkillAdd();
+                }
+              }}
               placeholder="Enter a skill"
               className={`flex-1 p-2 rounded-md border ${
                 darkMode

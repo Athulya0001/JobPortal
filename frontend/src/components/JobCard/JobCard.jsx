@@ -45,7 +45,7 @@ const JobCard = ({ job }) => {
           </div>
         </div>
       ),
-      { autoClose: false } // keep it open until user interacts
+      { autoClose: false }
     );
   };
 

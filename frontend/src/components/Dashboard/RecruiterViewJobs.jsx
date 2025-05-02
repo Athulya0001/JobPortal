@@ -3,16 +3,16 @@ import { useSelector} from 'react-redux';
 import { ThemeContext } from '../../Context/ThemeContext';
 import JobCard from '../JobCard/JobCard';
 import Loading from '../Loading/Loading'
+import { JobContext } from '../../Context/JobContext';
 
 const RecruiterViewJobs = () => {
   const jobs = useSelector((state)=>state.auth.recruiterProfile.jobsCreated)
 
   const { darkMode } = useContext(ThemeContext);
+  const { loading } = useContext(JobContext);
 
-  if (!jobs) {
-    return <div>
-      <Loading />
-    </div>
+  if (!jobs || loading) {
+    return <Loading />
   }
 
   return (

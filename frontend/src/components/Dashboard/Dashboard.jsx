@@ -16,7 +16,7 @@ const Dashboard = () => {
 
   return (
     <div
-      className={`flex relative min-h-screen pt-[105px] md:pt-[72px] ${
+      className={`flex z-10 relative min-h-screen pt-[105px] md:pt-[72px] ${
         darkMode ? "bg-gray-900 text-white" : "bg-gray-50 text-gray-900"
       }`}
     >

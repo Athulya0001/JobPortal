@@ -12,8 +12,7 @@ export const addJob = async (req, res) => {
       !description ||
       !skillsRequired ||
       !numberOfVacancies ||
-      !createdBy ||
-      !thumbnail
+      !createdBy
     ) {
       return res.status(400).json({ success: false, message: "Missing required fields" });
     }
@@ -60,10 +59,10 @@ export const deleteJob = async (req, res) => {
     const jobId = req.params.id;
     await Job.findByIdAndDelete(jobId);
     const jobs = await Job.find().sort({ createdAt: -1 });
-    res.status(200).json({ success: true, jobs });
+    return res.status(200).json({ success: true, jobs });
   } catch (err) {
     console.error("Delete Job Error:", err);
-    res.status(500).json({ success: false, message: "Failed to delete job" });
+    return res.status(500).json({ success: false, message: "Failed to delete job" });
   }
 };
 
@@ -76,10 +75,10 @@ export const updateJob = async (req, res) => {
     const updatedJob = await Job.findByIdAndUpdate(jobId, updateFields, { new: true });
 
     const jobs = await Job.find().sort({ createdAt: -1 });
-    res.status(200).json({ success: true, updatedJob, jobs });
+    return res.status(200).json({ success: true, updatedJob, jobs });
   } catch (err) {
     console.error("Update Job Error:", err);
-    res.status(500).json({ success: false, message: "Failed to update job" });
+    return res.status(500).json({ success: false, message: "Failed to update job" });
   }
 }
 

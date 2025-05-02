@@ -34,7 +34,7 @@ const Footer = () => {
 
   return (
     <footer
-      className={`pt-4 px-4 md:px-6 pb-2 mt-20 ${
+      className={`pt-4 px-4 md:px-6 pb-2 ${
         darkMode ? "bg-gray-950 text-white" : "bg-gray-100 text-gray-800"
       }`}
     >
