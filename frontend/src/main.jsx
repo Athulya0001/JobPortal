@@ -7,8 +7,8 @@ import store from "./Redux/store";
 import "./index.css";
 import App from "./App";
 import { ThemeProvider } from "./Context/ThemeContext";
-import { JobProvider } from "./Context/JobContext";
 import { UserProvider } from "./Context/UserContext";
+import { JobProvider } from "./Context/JobContext";
 
 const clerkPubKey = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY;
 

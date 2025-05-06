@@ -4,7 +4,6 @@ import { toast } from "react-toastify";
 import axios from "axios";
 import { ThemeContext } from "../../Context/ThemeContext";
 import { UserContext } from "../../Context/UserContext";
-import PDFViewer from "../PDFViewer/PDFViewer";
 import { AiOutlineClose } from "react-icons/ai";
 
 const RecruiterViewApplicants = () => {
