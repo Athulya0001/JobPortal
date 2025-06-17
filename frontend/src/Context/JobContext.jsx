@@ -33,7 +33,7 @@ export const JobProvider = ({ children }) => {
         formDataToSend.append("thumbnail", formData.thumbnail);
       }
 
-      const res = await axios.post("http://localhost:4000/api/job/add", formDataToSend, {
+      const res = await axios.post("https://nexthire-rfiq.onrender.com/api/job/add", formDataToSend, {
         headers: {
           "Content-Type": "multipart/form-data",
         },
@@ -56,7 +56,7 @@ export const JobProvider = ({ children }) => {
   const deleteJob = async (jobId) => {
     setLoading(true)
     try {
-      const res = await axios.delete(`http://localhost:4000/api/job/${jobId}`);
+      const res = await axios.delete(`https://nexthire-rfiq.onrender.com/api/job/${jobId}`);
       if (res.data.success) {
         dispatch(setAllJobs(res.data.jobs));
         navigate("/dashboard")
@@ -75,7 +75,7 @@ export const JobProvider = ({ children }) => {
   // Update job
   const updateJob = async (jobId, updatedData) => {
     try {
-      const res = await axios.put(`http://localhost:4000/api/job/${jobId}`, updatedData);
+      const res = await axios.put(`https://nexthire-rfiq.onrender.com/api/job/${jobId}`, updatedData);
       if (res.data.success) {
         dispatch(setAllJobs(res.data.jobs));
         toast.success("Job updated successfully");
@@ -93,7 +93,7 @@ export const JobProvider = ({ children }) => {
     if (!user || user.role !== 'candidate') return;
   
     try {
-      const res = await axios.post(`http://localhost:4000/api/candidate/save-job/${jobId}`, {
+      const res = await axios.post(`https://nexthire-rfiq.onrender.com/api/candidate/save-job/${jobId}`, {
         candidateId: candidate._id,
       });
   
@@ -114,7 +114,7 @@ export const JobProvider = ({ children }) => {
   const fetchAllJobs = useCallback(async () => {
     setLoading(true);
     try {
-      const res = await axios.get(`http://localhost:4000/api/job`);
+      const res = await axios.get(`https://nexthire-rfiq.onrender.com/api/job`);
       if (res.data.success) {
         dispatch(setAllJobs(res.data.jobs));
     

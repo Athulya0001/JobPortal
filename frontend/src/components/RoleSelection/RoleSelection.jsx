@@ -22,7 +22,7 @@ const RoleSelection = () => {
     try {
       const token = await getToken();
       const res = await axios.post(
-        "http://localhost:4000/api/user/register",
+        "https://nexthire-rfiq.onrender.com/api/user/register",
         {
           clerkId: user.clerkId,
           name: user.name,

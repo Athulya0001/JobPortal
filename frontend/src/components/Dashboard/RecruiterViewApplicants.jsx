@@ -36,7 +36,7 @@ const RecruiterViewApplicants = () => {
 
     try {
       const response = await axios.post(
-        `http://localhost:4000/api/recruiter/update-candidate-status/${jobId}`,
+        `https://nexthire-rfiq.onrender.com/api/recruiter/update-candidate-status/${jobId}`,
         { candidateId: applicantId, action: actionType },
         {
           withCredentials: true,

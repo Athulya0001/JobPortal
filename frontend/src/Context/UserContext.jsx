@@ -16,7 +16,7 @@ export const UserProvider = ({ children }) => {
 
     try {
       const token = await getToken();
-      const res = await axios.get(`http://localhost:4000/api/user/${user.id}`, {
+      const res = await axios.get(`https://nexthire-rfiq.onrender.com/api/user/${user.id}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
 

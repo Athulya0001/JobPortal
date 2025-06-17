@@ -77,7 +77,7 @@ const SetProfile = () => {
 
     try {
       const response = await axios.post(
-        "http://localhost:4000/api/user/complete-profile",
+        "https://nexthire-rfiq.onrender.com/api/user/complete-profile",
         formDataToSend,
         {
           headers: {

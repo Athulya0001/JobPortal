@@ -29,7 +29,7 @@ const JobDetails = () => {
 
   const fetchJob = async (jobId) => {
     try {
-      const res = await axios.get(`http://localhost:4000/api/job/${jobId}`);
+      const res = await axios.get(`https://nexthire-rfiq.onrender.com/api/job/${jobId}`);
       if (res.data.success) {
         setJob(res.data.job);
       } else {
@@ -59,7 +59,7 @@ const JobDetails = () => {
     }
 
     try {
-      const response = await axios.post(`http://localhost:4000/api/candidate/apply/${id}`, {
+      const response = await axios.post(`https://nexthire-rfiq.onrender.com/api/candidate/apply/${id}`, {
         candidateId: candidate._id,
       });
 

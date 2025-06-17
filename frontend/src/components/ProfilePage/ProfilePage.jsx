@@ -84,7 +84,7 @@ const ProfilePage = () => {
       }
 
       const response = await axios.post(
-        "http://localhost:4000/api/user/complete-profile",
+        "https://nexthire-rfiq.onrender.com/api/user/complete-profile",
         formPayload,
         {
           headers: {
