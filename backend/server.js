@@ -11,6 +11,7 @@ import events from "events";
 events.defaultMaxListeners = 20;
 
 const app = express()
+dotenv.config()
 
 app.use(cors({
     origin: ["http://localhost:5173", "https://job-portal-five-pi.vercel.app"],
@@ -19,8 +20,6 @@ app.use(cors({
 
 app.use(express.json())
 app.use(express.urlencoded({extended: true}))
-
-dotenv.config()
 
 app.use('/api/user', userRouter);
 app.use("/api/job", jobRouter);
